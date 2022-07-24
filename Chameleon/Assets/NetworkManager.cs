@@ -28,17 +28,25 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         PhotonNetwork.JoinOrCreateRoom("Room", new RoomOptions { MaxPlayers = 20 }, null);
     }
 
-     public override void OnJoinedRoom()
+    public override void OnJoinedRoom()
     {
         DisconnectPanel.SetActive(false);
+        Spawn();
     }
+
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     void Update() { if (Input.GetKeyDown(KeyCode.Escape) && PhotonNetwork.IsConnected) PhotonNetwork.Disconnect(); }
+
+    public void Spawn()
+    {
+        PhotonNetwork.Instantiate("Player", Vector3.zero, Quaternion.identity);
+        DisconnectPanel.SetActive(false);
+    }
 
     public override void OnDisconnected(DisconnectCause cause)
     {
