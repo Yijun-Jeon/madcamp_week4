@@ -20,7 +20,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     {
         NickNameText.text = PV.IsMine ? PhotonNetwork.NickName : PV.Owner.NickName;
         NickNameText.color = PV.IsMine ? Color.green : Color.red;
-        if(PV.IsMine)
+        if (PV.IsMine)
         {
             Camera.main.GetComponent<CameraController>().target = transform;
         }
@@ -30,30 +30,38 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (PV.IsMine)
         {
-            float xAxis = Input.GetAxisRaw("Horizontal");
-            float yAxis = Input.GetAxisRaw("Vertical");
-            RB.velocity = new Vector2(xAxis, yAxis) * moveSpeed ;
-
-            if (xAxis != 0 || yAxis != 0)
+            if (!AN.GetBool("dead"))
             {
-                AN.SetBool("walk", true);
-                PV.RPC("FlipXRPC", RpcTarget.AllBuffered, xAxis);
-                PV.RPC("FlipXRPC", RpcTarget.AllBuffered, xAxis);
-            }
-            else AN.SetBool("walk", false);
+                float xAxis = Input.GetAxisRaw("Horizontal");
+                float yAxis = Input.GetAxisRaw("Vertical");
+                RB.velocity = new Vector2(xAxis, yAxis) * moveSpeed;
 
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                AN.SetTrigger("attack");
+                if (xAxis != 0 || yAxis != 0)
+                {
+                    AN.SetBool("walk", true);
+                    PV.RPC("FlipXRPC", RpcTarget.AllBuffered, xAxis);
+                }
+                else AN.SetBool("walk", false);
+
+                if (Input.GetKeyDown(KeyCode.Space))
+                    PV.RPC("AttackRPC", RpcTarget.All);
             }
 
             if (Input.GetKeyDown(KeyCode.LeftShift))
             {
-                // AN.SetBool("dead", !AN.GetBool("dead"));
-                AN.SetBool("dead", true);
-            }
+                // PV.RPC("DeadRPC", RpcTarget.AllBuffered);
 
+                RB.velocity = Vector2.zero;
+                AN.SetBool("walk", false);
+                AN.SetBool("dead", !AN.GetBool("dead"));
+            }
         }
+
+        // !PV.IsMine
+        else if ((transform.position - curPos).sqrMagnitude >= 100)
+            transform.position = curPos;
+        else
+            transform.position = Vector3.Lerp(transform.position, curPos, Time.deltaTime * 10);
     }
 
     [PunRPC]
@@ -63,8 +71,30 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         else if (xAxis == 1) SR.flipX = false;
     }
 
+    [PunRPC]
+    void AttackRPC()
+    {
+        AN.SetTrigger("attack");
+    }
+
+    [PunRPC]
+    void DeadRPC()
+    {
+        RB.velocity = Vector2.zero;
+        AN.SetBool("walk", false);
+        AN.SetBool("dead", !AN.GetBool("dead"));
+    }
+
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
+        if (stream.IsWriting)
+        {
+            stream.SendNext(transform.position);
+        }
+        else
+        {
+            curPos = (Vector3)stream.ReceiveNext();
+        }
 
     }
 }
