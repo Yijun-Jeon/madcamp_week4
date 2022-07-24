@@ -12,6 +12,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     public SpriteRenderer SR;
     public PhotonView PV;
     public TMP_Text NickNameText;
+    public TMP_Text PowerText;
     [SerializeField] private float moveSpeed;
     bool isAlive;
     Vector3 curPos;
@@ -20,8 +21,10 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     {
         NickNameText.text = PV.IsMine ? PhotonNetwork.NickName : PV.Owner.NickName;
         NickNameText.color = PV.IsMine ? Color.green : Color.red;
+        PowerText.text = PV.IsMine ? "1" : "2" ;
         if (PV.IsMine)
         {
+            PowerText.color = new Color(0,0,0,0);
             Camera.main.GetComponent<CameraController>().target = transform;
         }
     }
@@ -30,6 +33,10 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (PV.IsMine)
         {
+            if(PowerText.text.Equals("1"))
+            {
+                moveSpeed = 8;
+            }
             if (!AN.GetBool("dead"))
             {
                 float xAxis = Input.GetAxisRaw("Horizontal");
