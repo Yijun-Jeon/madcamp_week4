@@ -17,7 +17,8 @@ GameObject:
   - component: {fileID: 5861691210899733113}
   - component: {fileID: 4359226043521053561}
   - component: {fileID: 1988280316814652435}
-  m_Layer: 0
+  - component: {fileID: 7149187950887336363}
+  m_Layer: 8
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -33,7 +34,7 @@ Transform:
   m_GameObject: {fileID: 1988280316814652457}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.2557, y: 0.2557, z: 0.2557}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8712679213908130826}
@@ -182,7 +183,7 @@ MonoBehaviour:
   ShowParameterInspector: 1
   m_SynchronizeParameters:
   - Type: 4
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: walk
   - Type: 9
     SynchronizeType: 0
@@ -226,6 +227,22 @@ MonoBehaviour:
   SR: {fileID: 1988280316814652438}
   PV: {fileID: 1600001984404583623}
   NickNameText: {fileID: 5615567538340792809}
+--- !u!70 &7149187950887336363
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1988280316814652457}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: -0.27}
+  m_Size: {x: 2.28, y: 4.03}
+  m_Direction: 0
 --- !u!1 &2103765103893906458
 GameObject:
   m_ObjectHideFlags: 0
@@ -238,7 +255,7 @@ GameObject:
   - component: {fileID: 6902459994475555964}
   - component: {fileID: 8858509030118822012}
   - component: {fileID: 5125883505803932663}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -338,7 +355,7 @@ GameObject:
   - component: {fileID: 8811338669388421344}
   - component: {fileID: 8767589920409848178}
   - component: {fileID: 5615567538340792809}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: NickNameText
   m_TagString: Untagged
   m_Icon: {fileID: 0}

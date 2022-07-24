@@ -20,6 +20,10 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     {
         NickNameText.text = PV.IsMine ? PhotonNetwork.NickName : PV.Owner.NickName;
         NickNameText.color = PV.IsMine ? Color.green : Color.red;
+        if(PV.IsMine)
+        {
+            Camera.main.GetComponent<CameraController>().target = transform;
+        }
     }
 
     void Update()
