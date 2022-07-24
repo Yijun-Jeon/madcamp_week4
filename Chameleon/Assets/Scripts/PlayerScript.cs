@@ -12,7 +12,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     public SpriteRenderer SR;
     public PhotonView PV;
     public TMP_Text NickNameText;
-
+    [SerializeField] private float moveSpeed;
     bool isAlive;
     Vector3 curPos;
 
@@ -34,7 +34,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
             {
                 float xAxis = Input.GetAxisRaw("Horizontal");
                 float yAxis = Input.GetAxisRaw("Vertical");
-                RB.velocity = new Vector2(4 * xAxis, 4 * yAxis);
+                RB.velocity = new Vector2(xAxis, yAxis) * moveSpeed;
 
                 if (xAxis != 0 || yAxis != 0)
                 {
