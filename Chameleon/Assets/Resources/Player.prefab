@@ -227,6 +227,7 @@ MonoBehaviour:
   SR: {fileID: 1988280316814652438}
   PV: {fileID: 1600001984404583623}
   NickNameText: {fileID: 5615567538340792809}
+  moveSpeed: 6
 --- !u!70 &7149187950887336363
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
