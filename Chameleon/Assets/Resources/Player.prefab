@@ -189,7 +189,7 @@ MonoBehaviour:
     SynchronizeType: 0
     Name: attack
   - Type: 4
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: dead
   m_SynchronizeLayers:
   - SynchronizeType: 0
