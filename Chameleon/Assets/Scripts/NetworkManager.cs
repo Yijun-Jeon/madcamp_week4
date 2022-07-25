@@ -13,6 +13,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public GameObject DisconnectPanel;
     public GameObject RespawnPanel;
     public GameObject Black;
+    public Camera MainCamera;
 
     void Awake()
     {
@@ -33,6 +34,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         DisconnectPanel.SetActive(false);
         Black.SetActive(true);
+        MainCamera.orthographicSize = 6;
         Spawn();
     }
 

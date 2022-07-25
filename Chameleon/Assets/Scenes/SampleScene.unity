@@ -1499,6 +1499,7 @@ MonoBehaviour:
   DisconnectPanel: {fileID: 1940347007}
   RespawnPanel: {fileID: 786270577}
   Black: {fileID: 791141776}
+  MainCamera: {fileID: 519420031}
 --- !u!4 &1054705960
 Transform:
   m_ObjectHideFlags: 0
