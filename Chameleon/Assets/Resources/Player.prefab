@@ -155,7 +155,7 @@ GameObject:
   - component: {fileID: 7149187950887336363}
   m_Layer: 5
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -364,6 +364,8 @@ MonoBehaviour:
   NickNameText: {fileID: 5615567538340792809}
   PowerText: {fileID: 181375377}
   moveSpeed: 6
+  coolTime: 0.5
+  pos: {fileID: 1988280316814652437}
 --- !u!70 &7149187950887336363
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
