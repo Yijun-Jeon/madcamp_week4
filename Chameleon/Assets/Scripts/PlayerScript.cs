@@ -16,15 +16,21 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     [SerializeField] private float moveSpeed;
     bool isAlive;
     Vector3 curPos;
+    
+    private float curTime;
+    public float coolTime = 0.5f;
+    public Transform pos;
 
     void Awake()
     {
         NickNameText.text = PV.IsMine ? PhotonNetwork.NickName : PV.Owner.NickName;
         NickNameText.color = PV.IsMine ? Color.green : Color.red;
+
+        // 공격력 일단 대충 처리
         PowerText.text = PV.IsMine ? "1" : "2" ;
         if (PV.IsMine)
         {
-            PowerText.color = new Color(0,0,0,0);
+            PowerText.color = new Color(0,0,0,0); // 본인 공격력 안보이게 처리 
             Camera.main.GetComponent<CameraController>().target = transform;
         }
     }
@@ -37,6 +43,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
             {
                 moveSpeed = 8;
             }
+            
             if (!AN.GetBool("dead"))
             {
                 float xAxis = Input.GetAxisRaw("Horizontal");
@@ -50,18 +57,39 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
                 }
                 else AN.SetBool("walk", false);
 
-                if (Input.GetKeyDown(KeyCode.Space))
-                    PV.RPC("AttackRPC", RpcTarget.All);
+                if(curTime <= 0)
+                {   //공격
+                    if (Input.GetKeyDown(KeyCode.Space))
+                    {
+                        Collider2D[] collider2Ds = Physics2D.OverlapCircleAll(pos.position,2f);
+                        
+
+                        foreach(Collider2D collider in collider2Ds)
+                        {
+                            if(collider.tag == "Player" && !collider.GetComponent<PlayerScript>().PV.IsMine)
+                            {
+                                collider.GetComponent<PlayerScript>().MakeDead();
+                            }
+                            Debug.Log(collider.tag);
+                        }
+                        PV.RPC("AttackRPC", RpcTarget.All);
+                        curTime = coolTime;
+                    }
+                }
+                else
+                {
+                    curTime -= Time.deltaTime;
+                }
             }
 
-            if (Input.GetKeyDown(KeyCode.LeftShift))
-            {
-                // PV.RPC("DeadRPC", RpcTarget.AllBuffered);
+            // if (Input.GetKeyDown(KeyCode.LeftShift))
+            // {
+            //     // PV.RPC("DeadRPC", RpcTarget.AllBuffered);
 
-                RB.velocity = Vector2.zero;
-                AN.SetBool("walk", false);
-                AN.SetBool("dead", !AN.GetBool("dead"));
-            }
+            //     RB.velocity = Vector2.zero;
+            //     AN.SetBool("walk", false);
+            //     AN.SetBool("dead", !AN.GetBool("dead"));
+            // }
         }
 
         // !PV.IsMine
@@ -69,6 +97,12 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
             transform.position = curPos;
         else
             transform.position = Vector3.Lerp(transform.position, curPos, Time.deltaTime * 10);
+    }
+
+
+    public void MakeDead()
+    {
+        PV.RPC("DeadRPC", RpcTarget.AllBuffered);
     }
 
     [PunRPC]
@@ -89,7 +123,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     {
         RB.velocity = Vector2.zero;
         AN.SetBool("walk", false);
-        AN.SetBool("dead", !AN.GetBool("dead"));
+        AN.SetBool("dead", true);
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
