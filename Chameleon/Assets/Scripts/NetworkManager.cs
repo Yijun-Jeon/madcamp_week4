@@ -12,6 +12,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public TMP_InputField NickNameInput;
     public GameObject DisconnectPanel;
     public GameObject RespawnPanel;
+    public GameObject Black;
+    public Camera MainCamera;
 
     void Awake()
     {
@@ -31,6 +33,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         DisconnectPanel.SetActive(false);
+        Black.SetActive(true);
+        MainCamera.orthographicSize = 6;
         Spawn();
     }
 
