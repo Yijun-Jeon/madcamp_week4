@@ -46,7 +46,7 @@ public class AttackRange : MonoBehaviour
         Vector2[] uv = new Vector2[vertices.Length];
         int[] triangles = new int[rayCount * 3];
 
-        vertices[0] = origin;
+        vertices[0] = Vector3.zero;
 
         int vertexIndex = 1;
         int triangleIndex = 0;
@@ -57,12 +57,12 @@ public class AttackRange : MonoBehaviour
             if (raycastHit2D.collider == null)
             {
                 // No hit
-                vertex = origin + UtilsClass.GetVectorFromAngle(angle) * viewDistance;
+                vertex = UtilsClass.GetVectorFromAngle(angle) * viewDistance;
             }
             else
             {
                 // Hit object
-                vertex = raycastHit2D.point;
+                vertex = raycastHit2D.point - new Vector2(origin.x, origin.y);
             }
             vertices[vertexIndex] = vertex;
 
@@ -105,5 +105,4 @@ public class AttackRange : MonoBehaviour
     {
         this.viewDistance = viewDistance;
     }
-
 }

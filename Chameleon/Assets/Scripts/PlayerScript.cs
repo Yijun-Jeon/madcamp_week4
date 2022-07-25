@@ -12,6 +12,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     public SpriteRenderer SR;
     public PhotonView PV;
     public TMP_Text NickNameText;
+    [SerializeField] private AttackRange attackRange;
     [SerializeField] private float moveSpeed;
     bool isAlive;
     Vector3 curPos;
@@ -20,9 +21,14 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     {
         NickNameText.text = PV.IsMine ? PhotonNetwork.NickName : PV.Owner.NickName;
         NickNameText.color = PV.IsMine ? Color.green : Color.red;
+        attackRange = transform.Find("AttackRange").gameObject.GetComponent<AttackRange>();
         if (PV.IsMine)
         {
             Camera.main.GetComponent<CameraController>().target = transform;
+        }
+        else
+        {
+            transform.Find("AttackRange").gameObject.SetActive(false);
         }
     }
 
@@ -30,11 +36,12 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (PV.IsMine)
         {
+            attackRange.SetOrigin(transform.position);
             if (!AN.GetBool("dead"))
             {
                 float xAxis = Input.GetAxisRaw("Horizontal");
                 float yAxis = Input.GetAxisRaw("Vertical");
-                RB.velocity = new Vector2(xAxis, yAxis) * moveSpeed;
+                RB.velocity = new Vector2(xAxis, yAxis).normalized * moveSpeed;
 
                 if (xAxis != 0 || yAxis != 0)
                 {
