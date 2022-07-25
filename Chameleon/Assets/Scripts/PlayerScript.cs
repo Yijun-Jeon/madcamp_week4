@@ -23,6 +23,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     public float coolTime = 0.5f;
     public Transform pos;
     public int power;
+    [SerializeField] public TMP_Text AlarmText;
     
 
     void Awake()
@@ -38,7 +39,12 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
             // 공격력 일단 대충 처리
             power = rand.Next(1,7);
             PowerText.text = power.ToString();
-            //PowerText.color = new Color(0,0,0,255); // 본인 공격력 안보이게 처리 
+            if(power < 3)
+            {
+                GameObject.Find("CameraCanvas").transform.Find("AlramText").gameObject.SetActive(true);
+            }
+            // 본인 공격력 안보이게 처리
+            //transform.Find("PowerText").gameObject.SetActive(false); 
             Camera.main.GetComponent<CameraController>().target = transform;
         }
         else

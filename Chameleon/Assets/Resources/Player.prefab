@@ -350,6 +350,7 @@ MonoBehaviour:
   coolTime: 0.5
   pos: {fileID: 1988280316814652437}
   power: 0
+  AlarmText: {fileID: 0}
 --- !u!70 &7149187950887336363
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
