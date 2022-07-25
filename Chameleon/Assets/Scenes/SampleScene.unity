@@ -1090,7 +1090,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!212 &791141777
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1498,6 +1498,7 @@ MonoBehaviour:
   NickNameInput: {fileID: 726946295}
   DisconnectPanel: {fileID: 1940347007}
   RespawnPanel: {fileID: 786270577}
+  Black: {fileID: 791141776}
 --- !u!4 &1054705960
 Transform:
   m_ObjectHideFlags: 0
