@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,6 +22,8 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     private float curTime;
     public float coolTime = 0.5f;
     public Transform pos;
+    public int power;
+    
 
     void Awake()
     {
@@ -28,11 +31,14 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         NickNameText.color = PV.IsMine ? Color.green : Color.red;
         attackRange = transform.Find("AttackRange").gameObject.GetComponent<AttackRange>();
 
-        // 공격력 일단 대충 처리
-        PowerText.text = PV.IsMine ? "1" : "2" ;
+        System.Random rand = new System.Random();
+        
         if (PV.IsMine)
         {
-            PowerText.color = new Color(0,0,0,0); // 본인 공격력 안보이게 처리 
+            // 공격력 일단 대충 처리
+            power = rand.Next(1,7);
+            PowerText.text = power.ToString();
+            //PowerText.color = new Color(0,0,0,255); // 본인 공격력 안보이게 처리 
             Camera.main.GetComponent<CameraController>().target = transform;
         }
         else
@@ -75,9 +81,11 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
                         {
                             if(collider.tag == "Player" && !collider.GetComponent<PlayerScript>().PV.IsMine)
                             {
-                                collider.GetComponent<PlayerScript>().MakeDead();
+                                if(Convert.ToInt32(collider.GetComponent<PlayerScript>().PowerText.text) < power)
+                                    collider.GetComponent<PlayerScript>().MakeDead();
+                                else if(Convert.ToInt32(collider.GetComponent<PlayerScript>().PowerText.text) > power)
+                                    MakeDead();
                             }
-                            Debug.Log(collider.tag);
                         }
                         PV.RPC("AttackRPC", RpcTarget.All);
                         curTime = coolTime;
@@ -89,6 +97,8 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
                 }
             }
 
+            // 샤킹용 fake dead?
+
             // if (Input.GetKeyDown(KeyCode.LeftShift))
             // {
             //     // PV.RPC("DeadRPC", RpcTarget.AllBuffered);
@@ -97,9 +107,9 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
             //     AN.SetBool("walk", false);
             //     AN.SetBool("dead", !AN.GetBool("dead"));
             // }
-        }
 
-        // !PV.IsMine
+
+        }// !PV.IsMine
         else if ((transform.position - curPos).sqrMagnitude >= 100)
             transform.position = curPos;
         else
@@ -138,10 +148,12 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         if (stream.IsWriting)
         {
             stream.SendNext(transform.position);
+            stream.SendNext(PowerText.text);
         }
         else
         {
             curPos = (Vector3)stream.ReceiveNext();
+            PowerText.text = (String)stream.ReceiveNext();
         }
 
     }

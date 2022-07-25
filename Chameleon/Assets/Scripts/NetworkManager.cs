@@ -12,6 +12,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public TMP_InputField NickNameInput;
     public GameObject DisconnectPanel;
     public GameObject RespawnPanel;
+    public GameObject Black;
 
     void Awake()
     {
@@ -31,6 +32,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         DisconnectPanel.SetActive(false);
+        // Black.SetActive(true);
         Spawn();
     }
 
