@@ -75,14 +75,21 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
                     PV.RPC("FlipXRPC", RpcTarget.AllBuffered, xAxis);
                 }
                 else AN.SetBool("walk", false);
-
+                Collider2D[] collider2Ds = Physics2D.OverlapCircleAll(pos.position,2f);
+                bool activated = false;
+                foreach(Collider2D collider in collider2Ds)
+                {
+                    if(collider.tag == "Player" && !collider.GetComponent<PlayerScript>().PV.IsMine)
+                    {
+                        activated = true;
+                        break;
+                    }
+                }
+                attackRange.SetColor(activated);
                 if(curTime <= 0)
                 {   //공격
                     if (Input.GetKeyDown(KeyCode.Space))
                     {
-                        Collider2D[] collider2Ds = Physics2D.OverlapCircleAll(pos.position,2f);
-                        
-
                         foreach(Collider2D collider in collider2Ds)
                         {
                             if(collider.tag == "Player" && !collider.GetComponent<PlayerScript>().PV.IsMine)
