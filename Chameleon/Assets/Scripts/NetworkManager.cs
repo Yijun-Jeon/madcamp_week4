@@ -97,6 +97,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         int index = 0;
         foreach (Player player in PhotonNetwork.PlayerList)
         {
+            print(player.NickName);
+            print(intArr[index]);
             player.SetCustomProperties(new Hashtable { { "power", intArr[index++] } });
         }
 
