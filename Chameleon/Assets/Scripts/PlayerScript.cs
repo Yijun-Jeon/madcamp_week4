@@ -26,13 +26,15 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     public Transform pos;
     public int power;
     [SerializeField] public TMP_Text AlarmText;
-
+    public bool isControl;
+    
 
     void Awake()
     {
         NickNameText.text = PV.IsMine ? PhotonNetwork.NickName : PV.Owner.NickName;
         NickNameText.color = PV.IsMine ? Color.green : Color.red;
         attackRange = transform.Find("AttackRange").gameObject.GetComponent<AttackRange>();
+        isControl = true;
 
         System.Random rand = new System.Random();
 
@@ -85,17 +87,22 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
             {
                 if (!AN.GetBool("dead"))
                 {
-                    float xAxis = Input.GetAxisRaw("Horizontal");
-                    float yAxis = Input.GetAxisRaw("Vertical");
-                    RB.velocity = new Vector2(xAxis, yAxis).normalized * moveSpeed;
-
-                    if (xAxis != 0 || yAxis != 0)
+                    if(isControl)
                     {
-                        AN.SetBool("walk", true);
-                        PV.RPC("FlipXRPC", RpcTarget.AllBuffered, xAxis);
+                        float xAxis = Input.GetAxisRaw("Horizontal");
+                        float yAxis = Input.GetAxisRaw("Vertical");
+                        RB.velocity = new Vector2(xAxis, yAxis).normalized * moveSpeed;
+
+                        if (xAxis != 0 || yAxis != 0)
+                        {
+                            AN.SetBool("walk", true);
+                            SR.flipX = (xAxis == -1);
+                            // PV.RPC(nameof(FlipXRPC), RpcTarget.AllBuffered, xAxis);
+                        }
+                        else AN.SetBool("walk", false);
                     }
-                    else AN.SetBool("walk", false);
-                    Collider2D[] collider2Ds = Physics2D.OverlapCircleAll(pos.position, 2f);
+                    
+	                Collider2D[] collider2Ds = Physics2D.OverlapCircleAll(pos.position,2f);
                     bool activated = false;
                     foreach (Collider2D collider in collider2Ds)
                     {
@@ -193,11 +200,13 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         {
             stream.SendNext(transform.position);
             stream.SendNext(PowerText.text);
+            stream.SendNext(SR.flipX);
         }
         else
         {
             curPos = (Vector3)stream.ReceiveNext();
             PowerText.text = (String)stream.ReceiveNext();
+            SR.flipX = (bool)stream.ReceiveNext();
         }
 
     }
