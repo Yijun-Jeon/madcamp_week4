@@ -46,7 +46,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
                 GameObject.Find("CameraCanvas").transform.Find("AlramText").gameObject.SetActive(true);
             }
             // 본인 공격력 안보이게 처리
-            // transform.Find("PowerText").gameObject.SetActive(false); 
+            PowerText.color = new Color(0,0,0,0);
             Camera.main.GetComponent<CameraController>().target = transform;
         }
         else
@@ -123,12 +123,15 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
                     if (Input.GetKeyDown(KeyCode.LeftShift))
                     {
                         PV.RPC("FakeRPC", RpcTarget.All);
+                        attackRange.SetColor(false);
                         curTime_fake = coolTime_fake;
                     }
                 }
                 else // dead
                 {
                     RB.velocity = Vector2.zero;
+                    PowerText.color = Color.white;
+                    attackRange.SetColor(false);
                 }   
             }
         }// !PV.IsMine
