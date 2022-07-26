@@ -25,11 +25,15 @@ public class AttackRange : MonoBehaviour
     [SerializeField] private float viewDistance;
     private Vector3 origin;
     private float startingAngle = 0f;
+    private Color baseColor;
+    private Color activatedColor;
     private void Start()
     {
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
-        GetComponent<MeshCollider>().sharedMesh = mesh;
+        baseColor = GetComponent<MeshRenderer>().material.color;
+        activatedColor = GetComponent<MeshRenderer>().material.color;
+        activatedColor.a += 0.2f;
 
         // fov = 180f;
         // viewDistance = 2f;
@@ -104,5 +108,10 @@ public class AttackRange : MonoBehaviour
     public void SetViewDistance(float viewDistance)
     {
         this.viewDistance = viewDistance;
+    }
+
+    public void SetColor(bool activated)
+    {
+        GetComponent<MeshRenderer>().material.color = activated ? activatedColor : baseColor;
     }
 }

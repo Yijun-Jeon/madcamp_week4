@@ -42,7 +42,8 @@ MonoBehaviour:
   - FlipXRPC
   - AttackRPC
   - DeadRPC
-  - startGameRPC
+  - FakeRPC
+  - NotFakeRPC
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1
