@@ -87,7 +87,8 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
                         if (xAxis != 0 || yAxis != 0)
                         {
                             AN.SetBool("walk", true);
-                            PV.RPC("FlipXRPC", RpcTarget.AllBuffered, xAxis);
+                            SR.flipX = (xAxis == -1);
+                            // PV.RPC(nameof(FlipXRPC), RpcTarget.AllBuffered, xAxis);
                         }
                         else AN.SetBool("walk", false);
                     }
@@ -188,11 +189,13 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         {
             stream.SendNext(transform.position);
             stream.SendNext(PowerText.text);
+            stream.SendNext(SR.flipX);
         }
         else
         {
             curPos = (Vector3)stream.ReceiveNext();
             PowerText.text = (String)stream.ReceiveNext();
+            SR.flipX = (bool)stream.ReceiveNext();
         }
 
     }
