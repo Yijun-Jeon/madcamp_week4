@@ -11,7 +11,10 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 47309098d5515e5448ba974b07d7941a
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/ReadyPanel.unity
     guid: 254baea6faf114246a65684cba4c69ad
+  - enabled: 1
+    path: Assets/Scenes/ReadyPanelv2.unity
+    guid: 456bd8373ad26b44a87151f23d6eead2
   m_configObjects: {}

@@ -18,7 +18,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     [SerializeField] private float moveSpeed;
     bool isAlive;
     Vector3 curPos;
-    
+
     private float curTime;
     public float coolTime = 1.7f;
     private float curTime_fake;
@@ -26,7 +26,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     public Transform pos;
     public int power;
     [SerializeField] public TMP_Text AlarmText;
-    
+
 
     void Awake()
     {
@@ -35,23 +35,32 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         attackRange = transform.Find("AttackRange").gameObject.GetComponent<AttackRange>();
 
         System.Random rand = new System.Random();
-        
+
         if (PV.IsMine)
         {
-            // 공격력 일단 대충 처리
-            power = rand.Next(1,7);
-            PowerText.text = power.ToString();
-            if(power < 3)
-            {
-                GameObject.Find("CameraCanvas").transform.Find("AlramText").gameObject.SetActive(true);
-            }
+            // // 공격력 일단 대충 처리
+            // power = rand.Next(1,7);
+            // PowerText.text = power.ToString();
+            // if(power < 3)
+            // {
+            //     GameObject.Find("CameraCanvas").transform.Find("AlramText").gameObject.SetActive(true);
+            // }
             // 본인 공격력 안보이게 처리
-            PowerText.color = new Color(0,0,0,0);
+            PowerText.color = new Color(0, 0, 0, 0);
             Camera.main.GetComponent<CameraController>().target = transform;
         }
         else
         {
             transform.Find("AttackRange").gameObject.SetActive(false);
+        }
+    }
+
+    public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
+    {
+        base.OnPlayerPropertiesUpdate(targetPlayer, changedProps);
+        if (targetPlayer.IsLocal && PV.IsMine)
+        {
+            PowerText.text = targetPlayer.CustomProperties["power"].ToString();
         }
     }
 
@@ -62,12 +71,12 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
             attackRange.SetOrigin(transform.position);
 
             // 꼴등 이속 버프
-            if(PowerText.text.Equals("1"))
+            if (PowerText.text.Equals("1"))
             {
                 moveSpeed = 8;
             }
-             // 샤킹중이면 아무것도 못함
-            if(curTime_fake > 0)
+            // 샤킹중이면 아무것도 못함
+            if (curTime_fake > 0)
             {
                 RB.velocity = Vector2.zero;
                 curTime_fake -= Time.deltaTime;
@@ -86,28 +95,28 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
                         PV.RPC("FlipXRPC", RpcTarget.AllBuffered, xAxis);
                     }
                     else AN.SetBool("walk", false);
-	                Collider2D[] collider2Ds = Physics2D.OverlapCircleAll(pos.position,2f);
+                    Collider2D[] collider2Ds = Physics2D.OverlapCircleAll(pos.position, 2f);
                     bool activated = false;
-                    foreach(Collider2D collider in collider2Ds)
+                    foreach (Collider2D collider in collider2Ds)
                     {
-                        if(collider.tag == "Player" && !collider.GetComponent<PlayerScript>().PV.IsMine)
-                        {   
+                        if (collider.tag == "Player" && !collider.GetComponent<PlayerScript>().PV.IsMine)
+                        {
                             activated = true;
                             break;
                         }
                     }
                     attackRange.SetColor(activated);
-                    if(curTime <= 0)
+                    if (curTime <= 0)
                     {   //공격
                         if (Input.GetKeyDown(KeyCode.Space))
-                        { 
-                            foreach(Collider2D collider in collider2Ds)
+                        {
+                            foreach (Collider2D collider in collider2Ds)
                             {
-                                if(collider.tag == "Player" && !collider.GetComponent<PlayerScript>().PV.IsMine)
+                                if (collider.tag == "Player" && !collider.GetComponent<PlayerScript>().PV.IsMine)
                                 {
-                                    if(Convert.ToInt32(collider.GetComponent<PlayerScript>().PowerText.text) < power)
+                                    if (Convert.ToInt32(collider.GetComponent<PlayerScript>().PowerText.text) < power)
                                         collider.GetComponent<PlayerScript>().MakeDead();
-                                    else if(Convert.ToInt32(collider.GetComponent<PlayerScript>().PowerText.text) > power)
+                                    else if (Convert.ToInt32(collider.GetComponent<PlayerScript>().PowerText.text) > power)
                                         MakeDead();
                                 }
                             }
@@ -119,7 +128,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
                     {
                         curTime -= Time.deltaTime;
                     }
-                    
+
                     if (Input.GetKeyDown(KeyCode.LeftShift))
                     {
                         PV.RPC("FakeRPC", RpcTarget.All);
@@ -132,13 +141,15 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
                     RB.velocity = Vector2.zero;
                     PowerText.color = Color.white;
                     attackRange.SetColor(false);
-                }   
+                }
             }
         }// !PV.IsMine
-        else if((transform.position - curPos).sqrMagnitude >= 100){
+        else if ((transform.position - curPos).sqrMagnitude >= 100)
+        {
             transform.position = curPos;
         }
-        else{
+        else
+        {
             transform.position = Vector3.Lerp(transform.position, curPos, Time.deltaTime * 10);
         }
     }
