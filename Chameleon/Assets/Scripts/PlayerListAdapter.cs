@@ -40,7 +40,7 @@ public class PlayerListAdapter : MonoBehaviourPunCallbacks
         foreach (Player player in PhotonNetwork.PlayerList)
         {
             GameObject curPlayer = Instantiate<GameObject>(this.playerInfo, contents.transform);
-            curPlayer.GetComponent<PlayerInfo>().SetNickName(player.NickName);
+            curPlayer.GetComponent<PlayerInfo>().SetNickName(player);
         }
     }
 
@@ -50,4 +50,3 @@ public class PlayerListAdapter : MonoBehaviourPunCallbacks
 
     }
 }
-
