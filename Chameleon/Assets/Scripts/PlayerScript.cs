@@ -35,6 +35,8 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     private bool isStart = false;
     public string minName = " ";
     public int kill = 0;
+    public GameObject contents;
+    public GameObject info;
 
 
     void Awake()
@@ -267,6 +269,9 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         RB.velocity = Vector2.zero;
         AN.SetBool("walk", false);
         AN.SetBool("dead", true);
+        GameObject kill = Instantiate<GameObject>(this.info,GameObject.Find("CameraCanvas").transform.Find("InGamePanel").transform.Find("KillList").transform.Find("ScrollView").transform.Find("Viewport").transform.Find("Contents").transform);
+        kill.GetComponent<KillInfo>().SetNickName(PV.Owner);
+        Destroy(kill,5f);
     }
 
     [PunRPC]
