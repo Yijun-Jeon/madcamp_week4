@@ -37,6 +37,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         DisconnectPanel.SetActive(false);
         Black.SetActive(true);
         ReadyPanel.SetActive(true);
+        if (!PhotonNetwork.IsMasterClient)
+            ReadyPanel.transform.Find("StartBtn").GetComponent<Button>().interactable = false;
         MainCamera.orthographicSize = 6;
         Spawn();
     }
@@ -72,13 +74,13 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             return;
 
         List<Vector3> SpawnSpaces = new List<Vector3>();
-        SpawnSpaces.Add(new Vector3(-27,6,0));SpawnSpaces.Add(new Vector3(0f,0f,0));SpawnSpaces.Add(new Vector3(11f,-4f,0));
-        SpawnSpaces.Add(new Vector3(25,0,0));SpawnSpaces.Add(new Vector3(40f,5.5f,0));SpawnSpaces.Add(new Vector3(52f,5.19f,0));
-        SpawnSpaces.Add(new Vector3(77.61f,-4f,0));SpawnSpaces.Add(new Vector3(105.54f,16.39f,0));SpawnSpaces.Add(new Vector3(36.21f,20.97f,0));
-        SpawnSpaces.Add(new Vector3(35f,37.33f,0));SpawnSpaces.Add(new Vector3(19.58f,17f,0));SpawnSpaces.Add(new Vector3(5f,22.05f,0));
-        SpawnSpaces.Add(new Vector3(3.76f,26.63f,0));SpawnSpaces.Add(new Vector3(9.02f,17.38f,0));SpawnSpaces.Add(new Vector3(-9.26f,18.11f,0));
-        SpawnSpaces.Add(new Vector3(2.07f,30.76f,0));SpawnSpaces.Add(new Vector3(56.3f,14.8f,0));SpawnSpaces.Add(new Vector3(2.89f,14.21f,0));
-        SpawnSpaces.Add(new Vector3(74.8f,6f,0));SpawnSpaces.Add(new Vector3(70.12f,-4f,0));
+        SpawnSpaces.Add(new Vector3(-27, 6, 0)); SpawnSpaces.Add(new Vector3(0f, 0f, 0)); SpawnSpaces.Add(new Vector3(11f, -4f, 0));
+        SpawnSpaces.Add(new Vector3(25, 0, 0)); SpawnSpaces.Add(new Vector3(40f, 5.5f, 0)); SpawnSpaces.Add(new Vector3(52f, 5.19f, 0));
+        SpawnSpaces.Add(new Vector3(77.61f, -4f, 0)); SpawnSpaces.Add(new Vector3(105.54f, 16.39f, 0)); SpawnSpaces.Add(new Vector3(36.21f, 20.97f, 0));
+        SpawnSpaces.Add(new Vector3(35f, 37.33f, 0)); SpawnSpaces.Add(new Vector3(19.58f, 17f, 0)); SpawnSpaces.Add(new Vector3(5f, 22.05f, 0));
+        SpawnSpaces.Add(new Vector3(3.76f, 26.63f, 0)); SpawnSpaces.Add(new Vector3(9.02f, 17.38f, 0)); SpawnSpaces.Add(new Vector3(-9.26f, 18.11f, 0));
+        SpawnSpaces.Add(new Vector3(2.07f, 30.76f, 0)); SpawnSpaces.Add(new Vector3(56.3f, 14.8f, 0)); SpawnSpaces.Add(new Vector3(2.89f, 14.21f, 0));
+        SpawnSpaces.Add(new Vector3(74.8f, 6f, 0)); SpawnSpaces.Add(new Vector3(70.12f, -4f, 0));
 
         for (int i = 0; i < SpawnSpaces.Count; i++)
         {
@@ -116,7 +118,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         {
             print(player.NickName);
             print(intArr[index]);
-            player.SetCustomProperties(new Hashtable { { "power", intArr[index] },{"space",SpawnSpaces[intArr[index]]} });
+            player.SetCustomProperties(new Hashtable { { "power", intArr[index] }, { "space", SpawnSpaces[intArr[index]] } });
             index++;
         }
 
