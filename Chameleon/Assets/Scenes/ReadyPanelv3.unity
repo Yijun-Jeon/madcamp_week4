@@ -286,8 +286,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -862569903
+  m_SortingLayer: -1
   m_SortingOrder: 4
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 0.5019608}
@@ -2012,7 +2012,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1106608259}
   - component: {fileID: 1106608260}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Contents
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2210,7 +2210,7 @@ GameObject:
   - component: {fileID: 1177602408}
   - component: {fileID: 1177602407}
   - component: {fileID: 1177602406}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: logo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14059,7 +14059,7 @@ GameObject:
   - component: {fileID: 1540607445}
   - component: {fileID: 1540607444}
   - component: {fileID: 1540607443}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: CameraCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14148,7 +14148,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
-  m_SortingLayerID: 0
+  m_SortingLayerID: 964178481
   m_SortingOrder: 3
   m_TargetDisplay: 0
 --- !u!1 &1690139190

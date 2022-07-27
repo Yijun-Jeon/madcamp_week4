@@ -113,7 +113,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
                         {
                             foreach (Collider2D collider in collider2Ds)
                             {
-                                if (collider.tag == "Player" && !collider.GetComponent<PlayerScript>().PV.IsMine)
+                                if (power != 0 && collider.tag == "Player" && !collider.GetComponent<PlayerScript>().PV.IsMine)
                                 {
                                     if (Convert.ToInt32(collider.GetComponent<PlayerScript>().PowerText.text) < power)
                                         collider.GetComponent<PlayerScript>().MakeDead();
