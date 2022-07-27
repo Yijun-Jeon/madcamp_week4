@@ -49,6 +49,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         DisconnectPanel.SetActive(false);
         Black.SetActive(true);
         ReadyPanel.SetActive(true);
+        if (!PhotonNetwork.IsMasterClient)
+            ReadyPanel.transform.Find("StartBtn").GetComponent<Button>().interactable = false;
         MainCamera.orthographicSize = 6;
         Spawn();
     }
@@ -103,10 +105,10 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.Instantiate("Player", Vector3.zero, Quaternion.identity);
         DisconnectPanel.SetActive(false);
-         if (PhotonNetwork.IsMasterClient)
-         {
+        if (PhotonNetwork.IsMasterClient)
+        {
             masterText.SetActive(true);
-         }
+        }
     }
 
     public override void OnDisconnected(DisconnectCause cause)
@@ -142,7 +144,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         // else
         PhotonNetwork.CurrentRoom.IsOpen = false;
 
-         int numOfPlayers = PhotonNetwork.PlayerList.Length;
+        int numOfPlayers = PhotonNetwork.PlayerList.Length;
 
         int[] intArr = new int[numOfPlayers];
 
