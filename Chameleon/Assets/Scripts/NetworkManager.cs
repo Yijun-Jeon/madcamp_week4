@@ -41,6 +41,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public override void OnConnectedToMaster()
     {
         PhotonNetwork.LocalPlayer.NickName = NickNameInput.text;
+        start = false;
+        end = false;
         PhotonNetwork.JoinOrCreateRoom("Room", new RoomOptions { MaxPlayers = 20, CleanupCacheOnLeave = false }, null);
     }
 
@@ -52,8 +54,16 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         if (!PhotonNetwork.IsMasterClient)
             ReadyPanel.transform.Find("StartBtn").GetComponent<Button>().interactable = false;
         MainCamera.orthographicSize = 6;
+        start = false;
+        end = false;
         print("!!");
         Spawn();
+    }
+
+    public override void OnCreatedRoom()
+    {
+        start = false;
+        end = false;
     }
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
