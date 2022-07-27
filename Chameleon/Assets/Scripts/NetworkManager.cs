@@ -222,6 +222,28 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         }
     }
 
+    public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
+    {
+        int numAlive = 0;
+        if (start && PhotonNetwork.IsMasterClient)
+        {
+            if (PhotonNetwork.IsMasterClient)
+            {
+                foreach (Player player in PhotonNetwork.PlayerList)
+                {
+                    bool dead = (bool)player.CustomProperties["dead"];
+                    if (!dead) numAlive++;
+                }
+                if (numAlive <= 1)
+                {
+                    Hashtable room_cp = PhotonNetwork.CurrentRoom.CustomProperties;
+                    room_cp["end"] = true;
+                    PhotonNetwork.CurrentRoom.SetCustomProperties(room_cp);
+                }
+            }
+        }
+    }
+
     [PunRPC]
     void startGameRPC()
     {

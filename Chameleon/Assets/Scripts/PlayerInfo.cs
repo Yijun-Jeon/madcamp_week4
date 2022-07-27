@@ -24,7 +24,7 @@ public class PlayerInfo : MonoBehaviour
 
     public void changeCamera()
     {
-        Transform targetTF = (PhotonNetwork.GetPhotonView((int)player.CustomProperties["PVID"])).transform;
+        Rigidbody2D targetTF = (PhotonNetwork.GetPhotonView((int)player.CustomProperties["PVID"])).GetComponent<Rigidbody2D>();
         GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>().target = targetTF;
     }
 

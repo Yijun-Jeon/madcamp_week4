@@ -8,16 +8,15 @@ public class CameraController : MonoBehaviour
     [SerializeField] private FieldOfView fieldOfView;
     private float smoothTime = 0.25f;
     private Vector3 velocity = Vector3.zero;
-    public Transform target = null;
+    public Rigidbody2D target = null;
     
 
     private void Update()
     {
         if(target != null)
         {
-            Vector3 targetPosition = target.position + offset;
+            Vector3 targetPosition = new Vector3(target.position.x, target.position.y, 0) + offset;
             transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, smoothTime);
-            fieldOfView.SetOrigin(target.position);
         }
     }
 }

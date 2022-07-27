@@ -16,6 +16,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     public PhotonView PV;
     public TMP_Text NickNameText;
     [SerializeField] private AttackRange attackRange;
+    [SerializeField] private FieldOfView fieldOfView;
     public TMP_Text PowerText;
     [SerializeField] private float moveSpeed;
     bool isAlive;
@@ -48,6 +49,8 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         NickNameText.text = PV.IsMine ? PhotonNetwork.NickName : PV.Owner.NickName;
         NickNameText.color = PV.IsMine ? Color.green : Color.red;
         attackRange = transform.Find("AttackRange").gameObject.GetComponent<AttackRange>();
+        if(PV.IsMine)
+            fieldOfView = GameObject.Find("FieldOfView").GetComponent<FieldOfView>();
         isControl = true;
         isMin = false;
         isSpawn = true;
@@ -57,7 +60,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         if (PV.IsMine)
         {
             PowerText.color = new Color(0, 0, 0, 0);
-            Camera.main.GetComponent<CameraController>().target = transform;
+            Camera.main.GetComponent<CameraController>().target = RB;
         }
         else
         {
@@ -128,6 +131,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (PV.IsMine)
         {
+            fieldOfView.SetOrigin(transform.position);
             attackRange.SetOrigin(transform.position);
             GameObject.Find("CameraCanvas").transform.Find("KillText").GetComponent<TMP_Text>().text = "Kill : " + kill.ToString();
 
