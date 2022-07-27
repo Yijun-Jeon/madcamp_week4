@@ -5,6 +5,8 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
+using System.Linq;
 
 public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
 {
@@ -27,6 +29,9 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     public int power;
     [SerializeField] public TMP_Text AlarmText;
     public bool isControl;
+    private bool isMin;
+    private bool isSpawn;
+    private bool isStart = false;
     
 
     void Awake()
@@ -35,6 +40,8 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         NickNameText.color = PV.IsMine ? Color.green : Color.red;
         attackRange = transform.Find("AttackRange").gameObject.GetComponent<AttackRange>();
         isControl = true;
+        isMin = false;
+        isSpawn = true;
 
         System.Random rand = new System.Random();
 
@@ -56,8 +63,34 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         {
             PowerText.text = targetPlayer.CustomProperties["power"].ToString();
             power = Convert.ToInt32(targetPlayer.CustomProperties["power"]);
-            this.transform.position = (Vector3)targetPlayer.CustomProperties["space"];
+            if(isSpawn){
+                this.transform.position = (Vector3)targetPlayer.CustomProperties["space"];
+                isSpawn = false;
+            }
         }
+        if(isStart){
+            int min = 20;
+            foreach (Player player in PhotonNetwork.PlayerList)
+            {
+                Hashtable table = player.CustomProperties;
+                if(!(Convert.ToBoolean(table["dead"]))){
+                    if(Convert.ToInt32(table["power"]) < min)
+                    {
+                        min = Convert.ToInt32(table["power"]);
+                    }
+                }
+            }
+            if(min == power)
+                isMin = true;
+        }
+        
+    }
+
+    public override void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
+    {
+        base.OnRoomPropertiesUpdate(propertiesThatChanged);
+        isStart = Convert.ToBoolean(PhotonNetwork.CurrentRoom.CustomProperties["start"]);
+
     }
 
     void Update()
@@ -67,9 +100,10 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
             attackRange.SetOrigin(transform.position);
 
             // 꼴등 이속 버프
-            if (PowerText.text.Equals("1"))
+            if (isMin || power == 1)
             {
                 moveSpeed = 8;
+                GameObject.Find("CameraCanvas").transform.Find("AlramText").gameObject.SetActive(true);
             }
             // 샤킹중이면 아무것도 못함
             if (curTime_fake > 0)
@@ -142,6 +176,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
                     RB.velocity = Vector2.zero;
                     PowerText.color = Color.white;
                     attackRange.SetColor(false);
+                    GameObject.Find("CameraCanvas").transform.Find("AlramText").gameObject.SetActive(false);
                 }
             }
         }// !PV.IsMine
@@ -159,6 +194,16 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     public void MakeDead()
     {
         PV.RPC("DeadRPC", RpcTarget.AllBuffered);
+        Hashtable player_cp = PV.Owner.CustomProperties;
+        player_cp["dead"] = true;
+        PV.Owner.SetCustomProperties(player_cp);
+        // player.SetCustomProperties(new Hashtable { { "power", intArr[index] },{"space",SpawnSpaces[intArr[index]]},{"dead",false} });
+        // List<int> dest = new List<int>(players);
+        // dest.Remove(power);
+        // players = dest.ToArray();
+        // Hashtable room_cp = PhotonNetwork.CurrentRoom.CustomProperties;
+        // room_cp["players"] = players;
+        // PhotonNetwork.CurrentRoom.SetCustomProperties(room_cp);
     }
 
     [PunRPC]

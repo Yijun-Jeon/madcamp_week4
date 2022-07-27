@@ -18,6 +18,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public GameObject EndPanel;
     public GameObject Black;
     public Camera MainCamera;
+    public GameObject masterText;
 
 
     private bool start = false;
@@ -25,7 +26,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     private double startTime;
     private double endTime;
 
-    [SerializeField] private double playTime; //seconds
+    public double playTime; //seconds
 
 
     void Awake()
@@ -102,6 +103,10 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.Instantiate("Player", Vector3.zero, Quaternion.identity);
         DisconnectPanel.SetActive(false);
+         if (PhotonNetwork.IsMasterClient)
+         {
+            masterText.SetActive(true);
+         }
     }
 
     public override void OnDisconnected(DisconnectCause cause)
@@ -137,7 +142,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         // else
         PhotonNetwork.CurrentRoom.IsOpen = false;
 
-        int numOfPlayers = PhotonNetwork.PlayerList.Length;
+         int numOfPlayers = PhotonNetwork.PlayerList.Length;
 
         int[] intArr = new int[numOfPlayers];
 
@@ -163,7 +168,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             print(player.NickName);
             print(intArr[index]);
             Hashtable player_cp = new Hashtable();
-            player_cp.Add("isDead", false);
+            player_cp.Add("dead", false);
             player_cp.Add("power", intArr[index]);
             player_cp.Add("space", SpawnSpaces[intArr[index]]);
             player.SetCustomProperties(player_cp);
@@ -174,6 +179,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         room_cp.Add("startTime", PhotonNetwork.Time);
         room_cp.Add("end", false);
         PhotonNetwork.CurrentRoom.SetCustomProperties(room_cp);
+        masterText.SetActive(false);
     }
 
 
