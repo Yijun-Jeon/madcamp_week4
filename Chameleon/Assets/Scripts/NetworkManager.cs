@@ -14,8 +14,20 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public GameObject DisconnectPanel;
     public GameObject RespawnPanel;
     public GameObject ReadyPanel;
+    public GameObject InGamePanel;
+    public GameObject EndPanel;
     public GameObject Black;
     public Camera MainCamera;
+    public GameObject masterText;
+
+
+    private bool start = false;
+    private bool end = false;
+    private double startTime;
+    private double endTime;
+
+    public double playTime; //seconds
+
 
     void Awake()
     {
@@ -54,18 +66,57 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         return PhotonNetwork.CurrentRoom.Players;
     }
 
-    void Update() { if (Input.GetKeyDown(KeyCode.Escape) && PhotonNetwork.IsConnected) PhotonNetwork.Disconnect(); }
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape) && PhotonNetwork.IsConnected)
+        {
+            PhotonNetwork.Disconnect();
+            return;
+        }
+        if (start)
+        {
+            double time = PhotonNetwork.Time;
+            if (time >= endTime)
+            {
+                if (PhotonNetwork.IsMasterClient)
+                {
+                    Hashtable room_cp = PhotonNetwork.CurrentRoom.CustomProperties;
+                    room_cp["end"] = true;
+                    PhotonNetwork.CurrentRoom.SetCustomProperties(room_cp);
+                }
+                InGamePanel.transform.Find("TimerText").GetComponent<TMP_Text>().text = $"게임 종료!";
+            }
+            else
+            {
+                double timeLeft = endTime - time;
+                string minute_text = ((int)timeLeft / 60 % 60).ToString();
+                string second_text = ((int)timeLeft % 60).ToString();
+                InGamePanel.transform.Find("TimerText").GetComponent<TMP_Text>().text = $"{minute_text} : {second_text.PadLeft(2, '0')}";
+                if (timeLeft < 30f)
+                {
+                    InGamePanel.transform.Find("TimerText").GetComponent<TMP_Text>().color = Color.red;
+                }
+            }
+        }
+
+    }
 
     public void Spawn()
     {
         PhotonNetwork.Instantiate("Player", Vector3.zero, Quaternion.identity);
         DisconnectPanel.SetActive(false);
+        if (PhotonNetwork.IsMasterClient)
+        {
+            masterText.SetActive(true);
+        }
     }
 
     public override void OnDisconnected(DisconnectCause cause)
     {
         DisconnectPanel.SetActive(true);
         RespawnPanel.SetActive(false);
+        InGamePanel.SetActive(false);
+        EndPanel.SetActive(false);
     }
 
     public void startGame()
@@ -118,18 +169,47 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         {
             print(player.NickName);
             print(intArr[index]);
-            player.SetCustomProperties(new Hashtable { { "power", intArr[index] }, { "space", SpawnSpaces[intArr[index]] } });
+            Hashtable player_cp = new Hashtable();
+            player_cp.Add("dead", false);
+            player_cp.Add("power", intArr[index]);
+            player_cp.Add("space", SpawnSpaces[intArr[index]]);
+            player.SetCustomProperties(player_cp);
             index++;
         }
-
-        PhotonNetwork.CurrentRoom.SetCustomProperties(new Hashtable() { { "start", true }, { "startTime", PhotonNetwork.Time } });
+        Hashtable room_cp = new Hashtable();
+        room_cp.Add("start", true);
+        room_cp.Add("startTime", PhotonNetwork.Time);
+        room_cp.Add("end", false);
+        PhotonNetwork.CurrentRoom.SetCustomProperties(room_cp);
+        masterText.SetActive(false);
     }
 
 
     public override void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
     {
-        base.OnRoomPropertiesUpdate(propertiesThatChanged);
-        ReadyPanel.SetActive(false);
+        object propsStart;
+        if (propertiesThatChanged.TryGetValue("start", out propsStart))
+        {
+            start = (bool)propsStart;
+        }
+        object propsStartTime;
+        if (propertiesThatChanged.TryGetValue("startTime", out propsStartTime))
+        {
+            startTime = (double)propsStartTime;
+            endTime = startTime + playTime;
+            ReadyPanel.SetActive(false);
+            InGamePanel.SetActive(true);
+        }
+        object propsEnd;
+        if (propertiesThatChanged.TryGetValue("end", out propsEnd))
+        {
+            end = (bool)propsEnd;
+            if (end == true)
+            {
+                InGamePanel.SetActive(false);
+                EndPanel.SetActive(true);
+            }
+        }
     }
 
     [PunRPC]
