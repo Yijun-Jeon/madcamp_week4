@@ -56,7 +56,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     }
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        if (PhotonNetwork.IsMasterClient)
+        if (!start && PhotonNetwork.IsMasterClient)
         {
             masterText.SetActive(true);
         }
@@ -206,6 +206,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             endTime = startTime + playTime;
             ReadyPanel.SetActive(false);
             InGamePanel.SetActive(true);
+            GameObject.Find("CameraCanvas").transform.Find("MinText").gameObject.SetActive(true);
+            GameObject.Find("CameraCanvas").transform.Find("KillText").gameObject.SetActive(true);
         }
         object propsEnd;
         if (propertiesThatChanged.TryGetValue("end", out propsEnd))
