@@ -40,14 +40,6 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
 
         if (PV.IsMine)
         {
-            // // 공격력 일단 대충 처리
-            // power = rand.Next(1,7);
-            // PowerText.text = power.ToString();
-            // if(power < 3)
-            // {
-            //     GameObject.Find("CameraCanvas").transform.Find("AlramText").gameObject.SetActive(true);
-            // }
-            // 본인 공격력 안보이게 처리
             PowerText.color = new Color(0, 0, 0, 0);
             Camera.main.GetComponent<CameraController>().target = transform;
         }
@@ -63,6 +55,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         if (targetPlayer.IsLocal && PV.IsMine)
         {
             PowerText.text = targetPlayer.CustomProperties["power"].ToString();
+            power = Convert.ToInt32(targetPlayer.CustomProperties["power"]);
         }
     }
 
