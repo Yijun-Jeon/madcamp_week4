@@ -24,8 +24,10 @@ public class PlayerInfo : MonoBehaviour
 
     public void changeCamera()
     {
-        Rigidbody2D targetTF = (PhotonNetwork.GetPhotonView((int)player.CustomProperties["PVID"])).GetComponent<Rigidbody2D>();
-        GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>().target = targetTF;
+        Transform targetTF = (PhotonNetwork.GetPhotonView((int)player.CustomProperties["PVID"])).gameObject.transform;
+        Rigidbody2D targetRB = (PhotonNetwork.GetPhotonView((int)player.CustomProperties["PVID"])).GetComponent<Rigidbody2D>();
+        GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>().targetTF = targetTF;
+        GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>().targetRB = targetRB;
     }
 
     // Update is called once per frame

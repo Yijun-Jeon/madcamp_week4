@@ -19,7 +19,6 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     [SerializeField] private FieldOfView fieldOfView;
     public TMP_Text PowerText;
     [SerializeField] private float moveSpeed;
-    bool isAlive;
     Vector3 curPos;
 
     private float curTime;
@@ -32,6 +31,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     public bool isControl;
     private bool isMin;
     private bool isSpawn;
+    private bool isDead = false;
     private bool isStart = false;
     public string minName = " ";
     public int kill = 0;
@@ -44,6 +44,8 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         Hashtable player_cp = PV.Owner.CustomProperties;
         player_cp["power"] = 0;
         player_cp["PVID"] = PV.ViewID;
+        player_cp["dead"] = false;
+        player_cp["space"] = Vector3.zero;
         PV.Owner.SetCustomProperties(player_cp);
 
         // GameObject.Find("PlayerList").GetComponent<PlayerListAdapter>().setTF(PV.Owner.ActorNumber, transform);
@@ -51,7 +53,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         NickNameText.text = PV.IsMine ? PhotonNetwork.NickName : PV.Owner.NickName;
         NickNameText.color = PV.IsMine ? Color.green : Color.red;
         attackRange = transform.Find("AttackRange").gameObject.GetComponent<AttackRange>();
-        if(PV.IsMine)
+        if (PV.IsMine)
             fieldOfView = GameObject.Find("FieldOfView").GetComponent<FieldOfView>();
         isControl = true;
         isMin = false;
@@ -62,7 +64,8 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         if (PV.IsMine)
         {
             PowerText.color = new Color(0, 0, 0, 0);
-            Camera.main.GetComponent<CameraController>().target = RB;
+            Camera.main.GetComponent<CameraController>().targetRB = RB;
+            Camera.main.GetComponent<CameraController>().targetTF = transform;
         }
         else
         {
@@ -73,14 +76,19 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
         base.OnPlayerPropertiesUpdate(targetPlayer, changedProps);
+
+        if (targetPlayer.IsLocal && (bool)targetPlayer.CustomProperties["dead"] && !isDead)
+            isDead = true;
+
         if (targetPlayer.IsLocal && PV.IsMine)
         {
             PowerText.text = targetPlayer.CustomProperties["power"].ToString();
             power = Convert.ToInt32(targetPlayer.CustomProperties["power"]);
             if (isSpawn)
             {
-                this.transform.position = (Vector3)targetPlayer.CustomProperties["space"];
-                isSpawn = false;
+                Vector3 curSpace = (Vector3)targetPlayer.CustomProperties["space"];
+                if (!curSpace.Equals(Vector3.zero))
+                    this.transform.position = curSpace;
             }
         }
         if (isStart)
@@ -110,6 +118,12 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         isStart = Convert.ToBoolean(PhotonNetwork.CurrentRoom.CustomProperties["start"]);
         if (isStart)
         {
+            if (!isDead && PV.IsMine)
+            {
+                Camera.main.GetComponent<CameraController>().targetRB = RB;
+                Camera.main.GetComponent<CameraController>().targetTF = transform;
+            }
+
             int min = 20;
             foreach (Player player in PhotonNetwork.PlayerList)
             {
@@ -133,7 +147,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (PV.IsMine)
         {
-            fieldOfView.SetOrigin(transform.position);
+            // fieldOfView.SetOrigin(transform.position);
             attackRange.SetOrigin(transform.position);
             GameObject.Find("CameraCanvas").transform.Find("KillText").GetComponent<TMP_Text>().text = "Kill : " + kill.ToString();
 
@@ -162,6 +176,8 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
 
                         if (xAxis != 0 || yAxis != 0)
                         {
+                            Camera.main.GetComponent<CameraController>().targetRB = RB;
+                            Camera.main.GetComponent<CameraController>().targetTF = transform;
                             AN.SetBool("walk", true);
                             SR.flipX = (xAxis == -1);
                             // PV.RPC(nameof(FlipXRPC), RpcTarget.AllBuffered, xAxis);
