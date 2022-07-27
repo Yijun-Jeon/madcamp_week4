@@ -57,7 +57,9 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public override void OnConnectedToMaster()
     {
         PhotonNetwork.LocalPlayer.NickName = NickNameInput.text;
-        PhotonNetwork.JoinOrCreateRoom("Room", new RoomOptions { MaxPlayers = 20 }, null);
+        start = false;
+        end = false;
+        PhotonNetwork.JoinOrCreateRoom("Room", new RoomOptions { MaxPlayers = 20, CleanupCacheOnLeave = false }, null);
     }
 
     public override void OnJoinedRoom()
@@ -68,7 +70,15 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         if (!PhotonNetwork.IsMasterClient)
             ReadyPanel.transform.Find("StartBtn").GetComponent<Button>().interactable = false;
         MainCamera.orthographicSize = 6;
+        start = false;
+        end = false;
         Spawn();
+    }
+
+    public override void OnCreatedRoom()
+    {
+        start = false;
+        end = false;
     }
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
@@ -77,6 +87,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             masterText.SetActive(true);
             ReadyPanel.transform.Find("StartBtn").GetComponent<Button>().interactable = true;
         }
+        CheckVictoryCondition();
     }
     // Start is called before the first frame update
     void Start()
@@ -93,6 +104,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         if (Input.GetKeyDown(KeyCode.Escape) && PhotonNetwork.IsConnected)
         {
+            PhotonNetwork.LeaveRoom();
             PhotonNetwork.Disconnect();
             return;
         }
@@ -126,7 +138,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public void Spawn()
     {
-        PhotonNetwork.Instantiate("Player", new Vector3(4.2f, 0.8f, 0), Quaternion.identity);
+        PhotonNetwork.Instantiate("Player", new Vector3(-4.2f, 0.8f, 0), Quaternion.identity);
         DisconnectPanel.SetActive(false);
         if (PhotonNetwork.IsMasterClient)
         {
@@ -148,7 +160,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             return;
 
         List<Vector3> SpawnSpaces = new List<Vector3>();
-        SpawnSpaces.Add(new Vector3(-27, 6, 0)); SpawnSpaces.Add(new Vector3(4.2f, 0.8f, 0)); SpawnSpaces.Add(new Vector3(11f, -4f, 0));
+        SpawnSpaces.Add(new Vector3(-27, 6, 0)); SpawnSpaces.Add(new Vector3(-4.2f, 0.8f, 0)); SpawnSpaces.Add(new Vector3(11f, -4f, 0));
         SpawnSpaces.Add(new Vector3(25, 0, 0)); SpawnSpaces.Add(new Vector3(40f, 5.5f, 0)); SpawnSpaces.Add(new Vector3(52f, 5.19f, 0));
         SpawnSpaces.Add(new Vector3(77.61f, -4f, 0)); SpawnSpaces.Add(new Vector3(105.54f, 16.39f, 0)); SpawnSpaces.Add(new Vector3(36.21f, 20.97f, 0));
         SpawnSpaces.Add(new Vector3(35f, 37.33f, 0)); SpawnSpaces.Add(new Vector3(19.58f, 17f, 0)); SpawnSpaces.Add(new Vector3(5f, 22.05f, 0));
@@ -232,6 +244,29 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             {
                 InGamePanel.SetActive(false);
                 EndPanel.SetActive(true);
+            }
+        }
+    }
+
+    public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
+    {
+        CheckVictoryCondition();
+    }
+    public void CheckVictoryCondition()
+    {
+        int numAlive = 0;
+        if (start && PhotonNetwork.IsMasterClient)
+        {
+            foreach (Player player in PhotonNetwork.PlayerList)
+            {
+                bool dead = (bool)player.CustomProperties["dead"];
+                if (!dead) numAlive++;
+            }
+            if (numAlive <= 1)
+            {
+                Hashtable room_cp = PhotonNetwork.CurrentRoom.CustomProperties;
+                room_cp["end"] = true;
+                PhotonNetwork.CurrentRoom.SetCustomProperties(room_cp);
             }
         }
     }
