@@ -33,6 +33,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     private bool isSpawn;
     private bool isStart = false;
     public string minName = " ";
+    public int kill = 0;
     
 
     void Awake()
@@ -112,12 +113,12 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
-
     void Update()
     {
         if (PV.IsMine)
         {
             attackRange.SetOrigin(transform.position);
+            GameObject.Find("CameraCanvas").transform.Find("KillText").GetComponent<TMP_Text>().text = "Kill : " + kill.ToString();
 
             // 꼴등 이속 버프
             if (isMin || power == 1)
@@ -168,12 +169,17 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
                         {
                             foreach (Collider2D collider in collider2Ds)
                             {
-                                if (power != 0 && collider.tag == "Player" && !collider.GetComponent<PlayerScript>().PV.IsMine)
+                                if (power != 0 && collider.tag == "Player" && !collider.GetComponent<PlayerScript>().PV.IsMine
+                                                                    && !collider.GetComponent<PlayerScript>().AN.GetBool("dead"))
                                 {
-                                    if (Convert.ToInt32(collider.GetComponent<PlayerScript>().PowerText.text) < power)
+                                    if (Convert.ToInt32(collider.GetComponent<PlayerScript>().PowerText.text) < power){
                                         collider.GetComponent<PlayerScript>().MakeDead();
-                                    else if (Convert.ToInt32(collider.GetComponent<PlayerScript>().PowerText.text) > power)
+                                        PV.RPC("IncreKillRPC", RpcTarget.All);
+                                    }
+                                    else if (Convert.ToInt32(collider.GetComponent<PlayerScript>().PowerText.text) > power){
                                         MakeDead();
+                                        collider.GetComponent<PlayerScript>().PV.RPC("IncreKillRPC", RpcTarget.All);
+                                    }
                                 }
                             }
                             PV.RPC("AttackRPC", RpcTarget.All);
@@ -227,7 +233,11 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         if (xAxis == -1) SR.flipX = true;
         else if (xAxis == 1) SR.flipX = false;
     }
-
+    [PunRPC]
+    void IncreKillRPC()
+    {
+        kill++;
+    }
     [PunRPC]
     void AttackRPC()
     {

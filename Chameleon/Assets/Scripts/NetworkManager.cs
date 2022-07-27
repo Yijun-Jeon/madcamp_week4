@@ -207,6 +207,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             ReadyPanel.SetActive(false);
             InGamePanel.SetActive(true);
             GameObject.Find("CameraCanvas").transform.Find("MinText").gameObject.SetActive(true);
+            GameObject.Find("CameraCanvas").transform.Find("KillText").gameObject.SetActive(true);
         }
         object propsEnd;
         if (propertiesThatChanged.TryGetValue("end", out propsEnd))
