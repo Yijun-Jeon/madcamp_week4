@@ -56,6 +56,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         {
             PowerText.text = targetPlayer.CustomProperties["power"].ToString();
             power = Convert.ToInt32(targetPlayer.CustomProperties["power"]);
+            this.transform.position = (Vector3)targetPlayer.CustomProperties["space"];
         }
     }
 
