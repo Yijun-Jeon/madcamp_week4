@@ -16,6 +16,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public GameObject ReadyPanel;
     public GameObject Black;
     public Camera MainCamera;
+    public GameObject masterText;
 
     void Awake()
     {
@@ -58,6 +59,10 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.Instantiate("Player", Vector3.zero, Quaternion.identity);
         DisconnectPanel.SetActive(false);
+         if (PhotonNetwork.IsMasterClient)
+         {
+            masterText.SetActive(true);
+         }
     }
 
     public override void OnDisconnected(DisconnectCause cause)
@@ -121,6 +126,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         }
 
         PhotonNetwork.CurrentRoom.SetCustomProperties(new Hashtable() { { "start", true }, { "startTime", PhotonNetwork.Time } });
+        masterText.SetActive(false);
     }
 
 
