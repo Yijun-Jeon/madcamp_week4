@@ -17,10 +17,10 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/ReadyPanelv2.unity
     guid: 456bd8373ad26b44a87151f23d6eead2
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/ReadyPanelv3.unity
     guid: 3b8243ebb33de854c8c65a65d4b39e9c
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/EndGameScene.unity
     guid: 4ada83dce8abf9149ba81805e8061d58
   m_configObjects: {}
