@@ -49,6 +49,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         DisconnectPanel.SetActive(false);
         Black.SetActive(true);
         ReadyPanel.SetActive(true);
+        if (!PhotonNetwork.IsMasterClient)
+            ReadyPanel.transform.Find("StartBtn").GetComponent<Button>().interactable = false;
         MainCamera.orthographicSize = 6;
         Spawn();
     }
