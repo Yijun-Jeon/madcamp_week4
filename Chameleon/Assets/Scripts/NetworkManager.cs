@@ -96,7 +96,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         // else
         PhotonNetwork.CurrentRoom.IsOpen = false;
 
-        int numOfPlayers = PhotonNetwork.PlayerList.Length;
+         int numOfPlayers = PhotonNetwork.PlayerList.Length;
 
         int[] intArr = new int[numOfPlayers];
 
@@ -121,11 +121,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         {
             print(player.NickName);
             print(intArr[index]);
-            player.SetCustomProperties(new Hashtable { { "power", intArr[index] },{"space",SpawnSpaces[intArr[index]]} });
+            player.SetCustomProperties(new Hashtable { { "power", intArr[index] },{"space",SpawnSpaces[intArr[index]]},{"dead",false} });
             index++;
         }
 
-        PhotonNetwork.CurrentRoom.SetCustomProperties(new Hashtable() { { "start", true }, { "startTime", PhotonNetwork.Time } });
+        PhotonNetwork.CurrentRoom.SetCustomProperties(new Hashtable() { { "start", true }, { "startTime", PhotonNetwork.Time }});
         masterText.SetActive(false);
     }
 
