@@ -31,7 +31,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     void Awake()
     {
-        Screen.SetResolution(960, 540, false);
+        // Screen.SetResolution(960, 540, false);
         PhotonNetwork.SendRate = 60;
         PhotonNetwork.SerializationRate = 30;
     }
@@ -52,7 +52,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         if (!PhotonNetwork.IsMasterClient)
             ReadyPanel.transform.Find("StartBtn").GetComponent<Button>().interactable = false;
         MainCamera.orthographicSize = 6;
-        print("!!");
         Spawn();
     }
     public override void OnPlayerLeftRoom(Player otherPlayer)
@@ -108,15 +107,14 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     }
 
-    public GameObject Spawn()
+    public void Spawn()
     {
-        GameObject prefab = PhotonNetwork.Instantiate("Player", Vector3.zero, Quaternion.identity);
+        PhotonNetwork.Instantiate("Player", Vector3.zero, Quaternion.identity);
         DisconnectPanel.SetActive(false);
         if (PhotonNetwork.IsMasterClient)
         {
             masterText.SetActive(true);
         }
-        return prefab;
     }
 
     public override void OnDisconnected(DisconnectCause cause)
@@ -175,8 +173,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         int index = 0;
         foreach (Player player in PhotonNetwork.PlayerList)
         {
-            print(player.NickName);
-            print(intArr[index]);
             Hashtable player_cp = new Hashtable();
             player_cp.Add("dead", false);
             player_cp.Add("power", intArr[index]);

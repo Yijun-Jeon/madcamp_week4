@@ -18,7 +18,6 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     [SerializeField] private AttackRange attackRange;
     public TMP_Text PowerText;
     [SerializeField] private float moveSpeed;
-    bool isAlive;
     Vector3 curPos;
 
     private float curTime;
@@ -31,6 +30,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     public bool isControl;
     private bool isMin;
     private bool isSpawn;
+    private bool isDead = false;
     private bool isStart = false;
     public string minName = " ";
     public int kill = 0;
@@ -68,11 +68,15 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
         base.OnPlayerPropertiesUpdate(targetPlayer, changedProps);
+
+        if (targetPlayer.IsLocal && (bool)targetPlayer.CustomProperties["dead"] && !isDead)
+            isDead = true;
+
         if (targetPlayer.IsLocal && PV.IsMine)
         {
             PowerText.text = targetPlayer.CustomProperties["power"].ToString();
             power = Convert.ToInt32(targetPlayer.CustomProperties["power"]);
-            if (isSpawn)
+            if (isSpawn && isStart)
             {
                 this.transform.position = (Vector3)targetPlayer.CustomProperties["space"];
                 isSpawn = false;
@@ -105,6 +109,9 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         isStart = Convert.ToBoolean(PhotonNetwork.CurrentRoom.CustomProperties["start"]);
         if (isStart)
         {
+            if (!isDead && PV.IsMine)
+                Camera.main.GetComponent<CameraController>().target = transform;
+
             int min = 20;
             foreach (Player player in PhotonNetwork.PlayerList)
             {
@@ -156,6 +163,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
 
                         if (xAxis != 0 || yAxis != 0)
                         {
+                            Camera.main.GetComponent<CameraController>().target = transform;
                             AN.SetBool("walk", true);
                             SR.flipX = (xAxis == -1);
                             // PV.RPC(nameof(FlipXRPC), RpcTarget.AllBuffered, xAxis);
