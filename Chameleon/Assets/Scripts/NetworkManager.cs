@@ -121,6 +121,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         DisconnectPanel.SetActive(true);
         RespawnPanel.SetActive(false);
+        ReadyPanel.SetActive(false);
         InGamePanel.SetActive(false);
         EndPanel.SetActive(false);
     }
