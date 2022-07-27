@@ -41,6 +41,8 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         Hashtable player_cp = PV.Owner.CustomProperties;
         player_cp["power"] = 0;
         player_cp["PVID"] = PV.ViewID;
+        player_cp["dead"] = false;
+        player_cp["space"] = Vector3.zero;
         PV.Owner.SetCustomProperties(player_cp);
 
         // GameObject.Find("PlayerList").GetComponent<PlayerListAdapter>().setTF(PV.Owner.ActorNumber, transform);
@@ -76,10 +78,11 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         {
             PowerText.text = targetPlayer.CustomProperties["power"].ToString();
             power = Convert.ToInt32(targetPlayer.CustomProperties["power"]);
-            if (isSpawn && isStart)
+            if (isSpawn)
             {
-                this.transform.position = (Vector3)targetPlayer.CustomProperties["space"];
-                isSpawn = false;
+                Vector3 curSpace = (Vector3)targetPlayer.CustomProperties["space"];
+                if (!curSpace.Equals(Vector3.zero))
+                    this.transform.position = curSpace;
             }
         }
         if (isStart)
