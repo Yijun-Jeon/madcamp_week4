@@ -34,10 +34,17 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     private bool isStart = false;
     public string minName = " ";
     public int kill = 0;
-    
+
 
     void Awake()
     {
+        Hashtable player_cp = PV.Owner.CustomProperties;
+        player_cp["power"] = 0;
+        player_cp["PVID"] = PV.ViewID;
+        PV.Owner.SetCustomProperties(player_cp);
+
+        // GameObject.Find("PlayerList").GetComponent<PlayerListAdapter>().setTF(PV.Owner.ActorNumber, transform);
+
         NickNameText.text = PV.IsMine ? PhotonNetwork.NickName : PV.Owner.NickName;
         NickNameText.color = PV.IsMine ? Color.green : Color.red;
         attackRange = transform.Find("AttackRange").gameObject.GetComponent<AttackRange>();
@@ -65,25 +72,28 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         {
             PowerText.text = targetPlayer.CustomProperties["power"].ToString();
             power = Convert.ToInt32(targetPlayer.CustomProperties["power"]);
-            if(isSpawn){
+            if (isSpawn)
+            {
                 this.transform.position = (Vector3)targetPlayer.CustomProperties["space"];
                 isSpawn = false;
             }
         }
-        if(isStart){
+        if (isStart)
+        {
             int min = 20;
             foreach (Player player in PhotonNetwork.PlayerList)
             {
                 Hashtable table = player.CustomProperties;
-                if(!(Convert.ToBoolean(table["dead"]))){
-                    if(Convert.ToInt32(table["power"]) < min)
+                if (!(Convert.ToBoolean(table["dead"])))
+                {
+                    if (Convert.ToInt32(table["power"]) < min)
                     {
                         min = Convert.ToInt32(table["power"]);
                         minName = player.NickName;
                     }
                 }
             }
-            if(min == power)
+            if (min == power)
                 isMin = true;
             GameObject.Find("CameraCanvas").transform.Find("MinText").GetComponent<TMP_Text>().text = "현재 꼴등 : " + minName;
         }
@@ -93,21 +103,22 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     {
         base.OnRoomPropertiesUpdate(propertiesThatChanged);
         isStart = Convert.ToBoolean(PhotonNetwork.CurrentRoom.CustomProperties["start"]);
-        if(isStart)
+        if (isStart)
         {
             int min = 20;
             foreach (Player player in PhotonNetwork.PlayerList)
             {
                 Hashtable table = player.CustomProperties;
-                if(!(Convert.ToBoolean(table["dead"]))){
-                    if(Convert.ToInt32(table["power"]) < min)
+                if (!(Convert.ToBoolean(table["dead"])))
+                {
+                    if (Convert.ToInt32(table["power"]) < min)
                     {
                         min = Convert.ToInt32(table["power"]);
                         minName = player.NickName;
                     }
                 }
             }
-            if(min == power)
+            if (min == power)
                 isMin = true;
             GameObject.Find("CameraCanvas").transform.Find("MinText").GetComponent<TMP_Text>().text = "현재 꼴등 : " + minName;
         }
@@ -137,7 +148,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
             {
                 if (!AN.GetBool("dead"))
                 {
-                    if(isControl)
+                    if (isControl)
                     {
                         float xAxis = Input.GetAxisRaw("Horizontal");
                         float yAxis = Input.GetAxisRaw("Vertical");
@@ -151,8 +162,8 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
                         }
                         else AN.SetBool("walk", false);
                     }
-                    
-	                Collider2D[] collider2Ds = Physics2D.OverlapCircleAll(pos.position,2f);
+
+                    Collider2D[] collider2Ds = Physics2D.OverlapCircleAll(pos.position, 2f);
                     bool activated = false;
                     foreach (Collider2D collider in collider2Ds)
                     {
@@ -172,11 +183,13 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
                                 if (power != 0 && collider.tag == "Player" && !collider.GetComponent<PlayerScript>().PV.IsMine
                                                                     && !collider.GetComponent<PlayerScript>().AN.GetBool("dead"))
                                 {
-                                    if (Convert.ToInt32(collider.GetComponent<PlayerScript>().PowerText.text) < power){
+                                    if (Convert.ToInt32(collider.GetComponent<PlayerScript>().PowerText.text) < power)
+                                    {
                                         collider.GetComponent<PlayerScript>().MakeDead();
                                         PV.RPC("IncreKillRPC", RpcTarget.All);
                                     }
-                                    else if (Convert.ToInt32(collider.GetComponent<PlayerScript>().PowerText.text) > power){
+                                    else if (Convert.ToInt32(collider.GetComponent<PlayerScript>().PowerText.text) > power)
+                                    {
                                         MakeDead();
                                         collider.GetComponent<PlayerScript>().PV.RPC("IncreKillRPC", RpcTarget.All);
                                     }

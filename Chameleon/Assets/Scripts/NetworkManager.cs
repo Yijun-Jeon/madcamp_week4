@@ -7,12 +7,12 @@ using UnityEngine.UI;
 using TMPro;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 
+
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
-
+    Dictionary<int, GameObject> prefabDict;
     public TMP_InputField NickNameInput;
     public GameObject DisconnectPanel;
-    public GameObject RespawnPanel;
     public GameObject ReadyPanel;
     public GameObject InGamePanel;
     public GameObject EndPanel;
@@ -52,6 +52,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         if (!PhotonNetwork.IsMasterClient)
             ReadyPanel.transform.Find("StartBtn").GetComponent<Button>().interactable = false;
         MainCamera.orthographicSize = 6;
+        print("!!");
         Spawn();
     }
     public override void OnPlayerLeftRoom(Player otherPlayer)
@@ -107,20 +108,20 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     }
 
-    public void Spawn()
+    public GameObject Spawn()
     {
-        PhotonNetwork.Instantiate("Player", Vector3.zero, Quaternion.identity);
+        GameObject prefab = PhotonNetwork.Instantiate("Player", Vector3.zero, Quaternion.identity);
         DisconnectPanel.SetActive(false);
         if (PhotonNetwork.IsMasterClient)
         {
             masterText.SetActive(true);
         }
+        return prefab;
     }
 
     public override void OnDisconnected(DisconnectCause cause)
     {
         DisconnectPanel.SetActive(true);
-        RespawnPanel.SetActive(false);
         ReadyPanel.SetActive(false);
         InGamePanel.SetActive(false);
         EndPanel.SetActive(false);
