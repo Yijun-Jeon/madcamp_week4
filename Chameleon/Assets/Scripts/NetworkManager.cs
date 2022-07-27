@@ -52,7 +52,13 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         MainCamera.orthographicSize = 6;
         Spawn();
     }
-
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            masterText.SetActive(true);
+        }
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -103,10 +109,10 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.Instantiate("Player", Vector3.zero, Quaternion.identity);
         DisconnectPanel.SetActive(false);
-         if (PhotonNetwork.IsMasterClient)
-         {
+        if (PhotonNetwork.IsMasterClient)
+        {
             masterText.SetActive(true);
-         }
+        }
     }
 
     public override void OnDisconnected(DisconnectCause cause)
@@ -142,7 +148,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         // else
         PhotonNetwork.CurrentRoom.IsOpen = false;
 
-         int numOfPlayers = PhotonNetwork.PlayerList.Length;
+        int numOfPlayers = PhotonNetwork.PlayerList.Length;
 
         int[] intArr = new int[numOfPlayers];
 
