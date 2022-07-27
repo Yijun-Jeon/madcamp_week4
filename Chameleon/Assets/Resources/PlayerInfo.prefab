@@ -68,8 +68,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: ???
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: b3d43c7bde0709744a0183246911525a, type: 2}
-  m_sharedMaterial: {fileID: 8387103408986337496, guid: b3d43c7bde0709744a0183246911525a, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 6e94e571a389ef04e8f7e9f47566b54e, type: 2}
+  m_sharedMaterial: {fileID: -3308143284109774829, guid: 6e94e571a389ef04e8f7e9f47566b54e, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -203,8 +203,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: NickName
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: b3d43c7bde0709744a0183246911525a, type: 2}
-  m_sharedMaterial: {fileID: 8387103408986337496, guid: b3d43c7bde0709744a0183246911525a, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 6e94e571a389ef04e8f7e9f47566b54e, type: 2}
+  m_sharedMaterial: {fileID: -3308143284109774829, guid: 6e94e571a389ef04e8f7e9f47566b54e, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -397,8 +397,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nickName: {fileID: 1770980405807578422}
-  playerList: {fileID: 0}
-  mainCamera: {fileID: 0}
 --- !u!114 &5214919816136180000
 MonoBehaviour:
   m_ObjectHideFlags: 0
