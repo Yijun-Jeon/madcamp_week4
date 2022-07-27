@@ -41,7 +41,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public override void OnConnectedToMaster()
     {
         PhotonNetwork.LocalPlayer.NickName = NickNameInput.text;
-        PhotonNetwork.JoinOrCreateRoom("Room", new RoomOptions { MaxPlayers = 20 }, null);
+        PhotonNetwork.JoinOrCreateRoom("Room", new RoomOptions { MaxPlayers = 20, CleanupCacheOnLeave = false }, null);
     }
 
     public override void OnJoinedRoom()
@@ -61,6 +61,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         {
             masterText.SetActive(true);
         }
+        CheckVictoryCondition();
     }
     // Start is called before the first frame update
     void Start()
@@ -77,6 +78,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         if (Input.GetKeyDown(KeyCode.Escape) && PhotonNetwork.IsConnected)
         {
+            PhotonNetwork.LeaveRoom();
             PhotonNetwork.Disconnect();
             return;
         }
@@ -224,26 +226,26 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
+        CheckVictoryCondition();
+    }
+    public void CheckVictoryCondition()
+    {
         int numAlive = 0;
         if (start && PhotonNetwork.IsMasterClient)
         {
-            if (PhotonNetwork.IsMasterClient)
+            foreach (Player player in PhotonNetwork.PlayerList)
             {
-                foreach (Player player in PhotonNetwork.PlayerList)
-                {
-                    bool dead = (bool)player.CustomProperties["dead"];
-                    if (!dead) numAlive++;
-                }
-                if (numAlive <= 1)
-                {
-                    Hashtable room_cp = PhotonNetwork.CurrentRoom.CustomProperties;
-                    room_cp["end"] = true;
-                    PhotonNetwork.CurrentRoom.SetCustomProperties(room_cp);
-                }
+                bool dead = (bool)player.CustomProperties["dead"];
+                if (!dead) numAlive++;
+            }
+            if (numAlive <= 1)
+            {
+                Hashtable room_cp = PhotonNetwork.CurrentRoom.CustomProperties;
+                room_cp["end"] = true;
+                PhotonNetwork.CurrentRoom.SetCustomProperties(room_cp);
             }
         }
     }
-
     [PunRPC]
     void startGameRPC()
     {
