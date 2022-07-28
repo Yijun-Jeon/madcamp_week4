@@ -60,7 +60,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         PhotonNetwork.LocalPlayer.NickName = NickNameInput.text;
         start = false;
         end = false;
-        PhotonNetwork.JoinOrCreateRoom("Room", new RoomOptions { MaxPlayers = 20}, null);
+        PhotonNetwork.JoinOrCreateRoom("Room", new RoomOptions { MaxPlayers = 20 }, null);
     }
 
     public override void OnJoinedRoom()
@@ -83,11 +83,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     }
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        if (PhotonNetwork.IsMasterClient)
-        {
-            PhotonNetwork.Destroy(PhotonNetwork.GetPhotonView((int)otherPlayer.CustomProperties["PVID"]));
+        // if (PhotonNetwork.IsMasterClient)
+        // {
+        //     PhotonNetwork.Destroy(PhotonNetwork.GetPhotonView((int)otherPlayer.CustomProperties["PVID"]));
 
-        }
+        // }
         if (!start && PhotonNetwork.IsMasterClient)
         {
             masterText.SetActive(true);
@@ -148,13 +148,24 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         DisconnectPanel.SetActive(false);
         if (PhotonNetwork.IsMasterClient)
         {
-            masterText.SetActive(true);
+            // Camera.main.transform.Find("CameraCanvas").transform.Find("MasterText").gameObject.SetActive(true);
+            // GameObject.FindGameObjectWithTag("MasterText").SetActive(true);
+            // masterText.SetActive(true);
+            Color textColor = masterText.GetComponent<TMP_Text>().color;
+            textColor.a = 1;
+            masterText.GetComponent<TMP_Text>().color = textColor;
         }
     }
 
     public override void OnDisconnected(DisconnectCause cause)
     {
         Camera.main.transform.Find("CameraCanvas").transform.Find("DisconnectPanel").gameObject.SetActive(true);
+        // Camera.main.transform.Find("CameraCanvas").transform.Find("MasterText").gameObject.SetActive(false);
+        // masterText.SetActive(false);
+        Color textColor = masterText.GetComponent<TMP_Text>().color;
+        textColor.a = 0;
+        masterText.GetComponent<TMP_Text>().color = textColor;
+        // GameObject.FindGameObjectWithTag("MasterText").SetActive(false);
         ReadyPanel.SetActive(false);
         InGamePanel.SetActive(false);
         EndPanel.SetActive(false);
@@ -252,7 +263,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         if (propertiesThatChanged.TryGetValue("startTime", out propsStartTime))
         {
             startTime = (double)propsStartTime;
-            endTime = (double) PhotonNetwork.CurrentRoom.CustomProperties["endTime"];
+            endTime = (double)PhotonNetwork.CurrentRoom.CustomProperties["endTime"];
             ReadyPanel.SetActive(false);
             InGamePanel.SetActive(true);
             GameObject.Find("CameraCanvas").transform.Find("MinText").gameObject.SetActive(true);
@@ -266,7 +277,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             {
                 InGamePanel.SetActive(false);
                 EndPanel.SetActive(true);
-                Invoke(nameof(AutoDisconnect),10f);
+                Invoke(nameof(AutoDisconnect), 10f);
             }
         }
     }

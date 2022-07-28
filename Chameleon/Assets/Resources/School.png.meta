@@ -20,7 +20,7 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
-  isReadable: 0
+  isReadable: 1
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
@@ -4258,7 +4258,7 @@ TextureImporter:
       School_193: -1604011865
       School_152: -227966211
       School_163: 180205891
-      School_161: -1896016476
+      School_69: -1185662774
       School_5: 254632334
       School_99: -1787446084
       School_32: 2074396859
@@ -4449,7 +4449,7 @@ TextureImporter:
       School_156: -2096321032
       School_169: -1623247252
       School_160: 566533092
-      School_69: -1185662774
+      School_161: -1896016476
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

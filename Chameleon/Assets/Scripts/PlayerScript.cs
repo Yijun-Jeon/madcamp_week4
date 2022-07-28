@@ -127,7 +127,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
             GameObject.Find("CameraCanvas").transform.Find("MinText").GetComponent<TMP_Text>().text = "현재 꼴등 : " + minName;
             GameObject.Find("CameraCanvas").transform.Find("InGamePanel").transform.Find("RemainText").GetComponent<TMP_Text>().text = remainCnt + "/" + PhotonNetwork.PlayerList.Length;
         }
-        if(prevIsStart != isStart)
+        if (prevIsStart != isStart)
         {
             UpdatePlayerStatus();
         }
@@ -243,7 +243,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         Hashtable player_cp = PV.Owner.CustomProperties;
         player_cp["dead"] = true;
         PV.Owner.SetCustomProperties(player_cp);
-        
+
     }
 
     [PunRPC]
@@ -272,9 +272,9 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         GameObject kill = Instantiate<GameObject>(this.info, GameObject.Find("CameraCanvas").transform.Find("InGamePanel").transform.Find("KillList").transform.Find("ScrollView").transform.Find("Viewport").transform.Find("Contents").transform);
         kill.GetComponent<KillInfo>().SetNickName(PV.Owner);
         Destroy(kill, 5f);
-        if(PV.IsMine)
+        if (PV.IsMine)
         {
-            Transform ReadyPanel =  GameObject.Find("CameraCanvas").transform.Find("ReadyPanel");
+            Transform ReadyPanel = GameObject.Find("CameraCanvas").transform.Find("ReadyPanel");
             ReadyPanel.gameObject.SetActive(true);
             ReadyPanel.Find("StartBtn").gameObject.SetActive(false);
             ReadyPanel.Find("CancelBtn").gameObject.SetActive(false);
@@ -306,7 +306,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     public void AdjustSpeedAndVision(int numAlive)
     {
         moveSpeed = 12f - numAlive * 0.3f;
-        if(PV.IsMine) fieldOfView.SetViewDistance(moveSpeed);
+        if (PV.IsMine) fieldOfView.SetViewDistance(moveSpeed);
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
@@ -339,7 +339,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
             if (isMin)
             {
                 moveSpeed += Math.Max(0, remainCnt - 2) * 0.1f;
-                if(PV.IsMine)
+                if (PV.IsMine)
                     fieldOfView.SetViewDistance(moveSpeed);
             }
             GameObject.Find("CameraCanvas").transform.Find("MinText").GetComponent<TMP_Text>().text = "현재 꼴등 : " + minName;
@@ -348,12 +348,12 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         else
         {
             moveSpeed = 6f;
-            if(PV.IsMine)
+            if (PV.IsMine)
                 fieldOfView.SetViewDistance(moveSpeed);
         }
         if (isStart && PV.IsMine)
         {
-            if(isMin || power == 1)
+            if (isMin || power == 1)
             {
                 minName = NickNameText.text;
                 GameObject.Find("CameraCanvas").transform.Find("AlramText").gameObject.SetActive(true);
