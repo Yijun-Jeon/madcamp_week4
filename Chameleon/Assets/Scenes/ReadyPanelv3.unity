@@ -1845,7 +1845,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -1.5800171, y: -55.44397}
+  m_AnchoredPosition: {x: -1.5800781, y: -55.44397}
   m_SizeDelta: {x: -413.96, y: 9.441}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &792001262
@@ -2414,7 +2414,6 @@ MonoBehaviour:
   Black: {fileID: 390776251}
   MainCamera: {fileID: 1812939825}
   masterText: {fileID: 1638823873}
-  playTime: 120
 --- !u!4 &1054705960
 Transform:
   m_ObjectHideFlags: 0
@@ -3165,7 +3164,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -746.00006, y: -37}
+  m_AnchoredPosition: {x: -745.99994, y: -37}
   m_SizeDelta: {x: -1419.1233, y: 111.08972}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1250000125
@@ -14871,7 +14870,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -1.5745239, y: -55.251648}
+  m_AnchoredPosition: {x: -1.5744629, y: -55.25171}
   m_SizeDelta: {x: -413.96, y: 9.441}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1567729560
@@ -15249,6 +15248,10 @@ PrefabInstance:
     - target: {fileID: 1335568492298253864, guid: 27dd26f970ebe1645bf2278d76d040a3, type: 3}
       propertyPath: m_Color.r
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5980582622804066964, guid: 27dd26f970ebe1645bf2278d76d040a3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6898174051109603181, guid: 27dd26f970ebe1645bf2278d76d040a3, type: 3}
       propertyPath: m_Name
