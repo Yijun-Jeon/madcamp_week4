@@ -84,7 +84,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         {
             PowerText.text = targetPlayer.CustomProperties["power"].ToString();
             power = Convert.ToInt32(targetPlayer.CustomProperties["power"]);
-            if (isSpawn)
+            if (isSpawn && !isStart)
             {
                 Vector3 curSpace = (Vector3)targetPlayer.CustomProperties["space"];
                 if (!curSpace.Equals(Vector3.zero))

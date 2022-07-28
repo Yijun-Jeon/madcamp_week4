@@ -158,7 +158,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 494.43, y: 32.82}
+  m_AnchoredPosition: {x: 494.43, y: 32.820007}
   m_SizeDelta: {x: 988.86, y: 65.64}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &9312173
@@ -1970,7 +1970,7 @@ MonoBehaviour:
   Black: {fileID: 390776251}
   MainCamera: {fileID: 1812939825}
   masterText: {fileID: 1638823873}
-  playTime: 60
+  playTime: 120
 --- !u!4 &1054705960
 Transform:
   m_ObjectHideFlags: 0
@@ -15315,7 +15315,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fieldOfView: {fileID: 598113259}
-  target: {fileID: 0}
+  targetRB: {fileID: 0}
+  targetTF: {fileID: 0}
 --- !u!212 &1812939828
 SpriteRenderer:
   m_ObjectHideFlags: 0
