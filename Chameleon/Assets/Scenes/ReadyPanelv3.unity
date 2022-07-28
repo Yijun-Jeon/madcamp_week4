@@ -1845,7 +1845,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -1.5800171, y: -55.44397}
+  m_AnchoredPosition: {x: -1.5800781, y: -55.44397}
   m_SizeDelta: {x: -413.96, y: 9.441}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &792001262
@@ -2414,7 +2414,6 @@ MonoBehaviour:
   Black: {fileID: 390776251}
   MainCamera: {fileID: 1812939825}
   masterText: {fileID: 1638823873}
-  playTime: 120
 --- !u!4 &1054705960
 Transform:
   m_ObjectHideFlags: 0
@@ -3165,7 +3164,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -746.00006, y: -37}
+  m_AnchoredPosition: {x: -745.99994, y: -37}
   m_SizeDelta: {x: -1419.1233, y: 111.08972}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1250000125
@@ -14871,7 +14870,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -1.5745239, y: -55.251648}
+  m_AnchoredPosition: {x: -1.5744629, y: -55.25171}
   m_SizeDelta: {x: -413.96, y: 9.441}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1567729560
@@ -15108,11 +15107,11 @@ GameObject:
   - component: {fileID: 1638823874}
   m_Layer: 5
   m_Name: 'MasterText '
-  m_TagString: Untagged
+  m_TagString: MasterText
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1638823874
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15137,14 +15136,14 @@ MonoBehaviour:
     \uB4E4\uC5B4\uC624\uBA74 \uAC8C\uC784\uC2DC\uC791 \uBC84\uD2BC\uC744 \uB20C\uB7EC\uC8FC\uC138\uC694"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6e94e571a389ef04e8f7e9f47566b54e, type: 2}
-  m_sharedMaterial: {fileID: 8387103408986337496, guid: b3d43c7bde0709744a0183246911525a, type: 2}
+  m_sharedMaterial: {fileID: -3308143284109774829, guid: 6e94e571a389ef04e8f7e9f47566b54e, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4292798720
-  m_fontColor: {r: 0, g: 0.9150943, b: 0.8716558, a: 1}
+    rgba: 14608640
+  m_fontColor: {r: 0, g: 0.9150943, b: 0.8716558, a: 0}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -15200,7 +15199,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &1638823875
@@ -15249,6 +15248,10 @@ PrefabInstance:
     - target: {fileID: 1335568492298253864, guid: 27dd26f970ebe1645bf2278d76d040a3, type: 3}
       propertyPath: m_Color.r
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5980582622804066964, guid: 27dd26f970ebe1645bf2278d76d040a3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6898174051109603181, guid: 27dd26f970ebe1645bf2278d76d040a3, type: 3}
       propertyPath: m_Name
