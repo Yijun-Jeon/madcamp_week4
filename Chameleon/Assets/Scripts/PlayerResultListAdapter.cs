@@ -63,6 +63,7 @@ public class PlayerResultListAdapter : MonoBehaviour
                     winner = item;
                 }
                 curPlayer.GetComponent<PlayerResultInfo>().backgroundImage.color = new Color(0f, 1f, 0f, 0.5f);
+                curPlayer.GetComponent<PlayerResultInfo>().spriteRenderer.enabled = false;
             }
         }
         if(winner != null)
