@@ -94,11 +94,13 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         if (isStart)
         {
             int min = 20;
+            int remainCnt = 0;
             foreach (Player player in PhotonNetwork.PlayerList)
             {
                 Hashtable table = player.CustomProperties;
                 if (!(Convert.ToBoolean(table["dead"])))
                 {
+                    remainCnt++;
                     if (Convert.ToInt32(table["power"]) < min)
                     {
                         min = Convert.ToInt32(table["power"]);
@@ -109,6 +111,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
             if (min == power)
                 isMin = true;
             GameObject.Find("CameraCanvas").transform.Find("MinText").GetComponent<TMP_Text>().text = "현재 꼴등 : " + minName;
+            GameObject.Find("CameraCanvas").transform.Find("InGamePanel").transform.Find("RemainText").GetComponent<TMP_Text>().text = remainCnt + "/" + PhotonNetwork.PlayerList.Length;
         }
     }
 
@@ -125,11 +128,13 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
             }
 
             int min = 20;
+            int remainCnt = 0;
             foreach (Player player in PhotonNetwork.PlayerList)
             {
                 Hashtable table = player.CustomProperties;
                 if (!(Convert.ToBoolean(table["dead"])))
                 {
+                    remainCnt++;
                     if (Convert.ToInt32(table["power"]) < min)
                     {
                         min = Convert.ToInt32(table["power"]);
@@ -140,6 +145,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
             if (min == power)
                 isMin = true;
             GameObject.Find("CameraCanvas").transform.Find("MinText").GetComponent<TMP_Text>().text = "현재 꼴등 : " + minName;
+            GameObject.Find("CameraCanvas").transform.Find("InGamePanel").transform.Find("RemainText").GetComponent<TMP_Text>().text = remainCnt + "/" + PhotonNetwork.PlayerList.Length;
         }
     }
 
