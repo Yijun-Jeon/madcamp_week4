@@ -70,6 +70,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         {
             transform.Find("AttackRange").gameObject.SetActive(false);
         }
+        UpdatePlayerStatus();
     }
 
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
@@ -90,33 +91,13 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
                     this.transform.position = curSpace;
             }
         }
-        if (isStart)
-        {
-            int min = 20;
-            int remainCnt = 0;
-            foreach (Player player in PhotonNetwork.PlayerList)
-            {
-                Hashtable table = player.CustomProperties;
-                if (!(Convert.ToBoolean(table["dead"])))
-                {
-                    remainCnt++;
-                    if (Convert.ToInt32(table["power"]) < min)
-                    {
-                        min = Convert.ToInt32(table["power"]);
-                        minName = player.NickName;
-                    }
-                }
-            }
-            if (min == power)
-                isMin = true;
-            GameObject.Find("CameraCanvas").transform.Find("MinText").GetComponent<TMP_Text>().text = "현재 꼴등 : " + minName;
-            GameObject.Find("CameraCanvas").transform.Find("InGamePanel").transform.Find("RemainText").GetComponent<TMP_Text>().text = remainCnt + "/" + PhotonNetwork.PlayerList.Length;
-        }
+        UpdatePlayerStatus();
     }
 
     public override void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
     {
         base.OnRoomPropertiesUpdate(propertiesThatChanged);
+        bool prevIsStart = isStart;
         isStart = Convert.ToBoolean(PhotonNetwork.CurrentRoom.CustomProperties["start"]);
         if (isStart)
         {
@@ -146,6 +127,10 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
             GameObject.Find("CameraCanvas").transform.Find("MinText").GetComponent<TMP_Text>().text = "현재 꼴등 : " + minName;
             GameObject.Find("CameraCanvas").transform.Find("InGamePanel").transform.Find("RemainText").GetComponent<TMP_Text>().text = remainCnt + "/" + PhotonNetwork.PlayerList.Length;
         }
+        if(prevIsStart != isStart)
+        {
+            UpdatePlayerStatus();
+        }
     }
 
     void Update()
@@ -156,13 +141,6 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
             attackRange.SetOrigin(transform.position);
             GameObject.Find("CameraCanvas").transform.Find("KillText").GetComponent<TMP_Text>().text = "Kill : " + kill.ToString();
 
-            // 꼴등 이속 버프
-            if (isMin || power == 1)
-            {
-                minName = NickNameText.text;
-                moveSpeed = 8;
-                GameObject.Find("CameraCanvas").transform.Find("AlramText").gameObject.SetActive(true);
-            }
             // 샤킹중이면 아무것도 못함
             if (curTime_fake > 0)
             {
@@ -294,9 +272,9 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         RB.velocity = Vector2.zero;
         AN.SetBool("walk", false);
         AN.SetBool("dead", true);
-        GameObject kill = Instantiate<GameObject>(this.info,GameObject.Find("CameraCanvas").transform.Find("InGamePanel").transform.Find("KillList").transform.Find("ScrollView").transform.Find("Viewport").transform.Find("Contents").transform);
+        GameObject kill = Instantiate<GameObject>(this.info, GameObject.Find("CameraCanvas").transform.Find("InGamePanel").transform.Find("KillList").transform.Find("ScrollView").transform.Find("Viewport").transform.Find("Contents").transform);
         kill.GetComponent<KillInfo>().SetNickName(PV.Owner);
-        Destroy(kill,5f);
+        Destroy(kill, 5f);
     }
 
     [PunRPC]
@@ -320,5 +298,62 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
             SR.flipX = (bool)stream.ReceiveNext();
         }
 
+    }
+    public void AdjustSpeedAndVision(int numAlive)
+    {
+        moveSpeed = 12f - numAlive * 0.3f;
+        if(PV.IsMine) fieldOfView.SetViewDistance(moveSpeed);
+    }
+
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        UpdatePlayerStatus();
+    }
+
+    public void UpdatePlayerStatus()
+    {
+        if (isStart)
+        {
+            int min = 20;
+            int remainCnt = 0;
+            foreach (Player player in PhotonNetwork.PlayerList)
+            {
+                Hashtable table = player.CustomProperties;
+                if (!(Convert.ToBoolean(table["dead"])))
+                {
+                    remainCnt++;
+                    if (Convert.ToInt32(table["power"]) < min)
+                    {
+                        min = Convert.ToInt32(table["power"]);
+                        minName = player.NickName;
+                    }
+                }
+            }
+            if (min == power)
+                isMin = true;
+            AdjustSpeedAndVision(remainCnt);
+            if (isMin)
+            {
+                moveSpeed += Math.Max(0, remainCnt - 2) * 0.1f;
+                if(PV.IsMine)
+                    fieldOfView.SetViewDistance(moveSpeed);
+            }
+            GameObject.Find("CameraCanvas").transform.Find("MinText").GetComponent<TMP_Text>().text = "현재 꼴등 : " + minName;
+            GameObject.Find("CameraCanvas").transform.Find("InGamePanel").transform.Find("RemainText").GetComponent<TMP_Text>().text = remainCnt + "/" + PhotonNetwork.PlayerList.Length;
+        }
+        else
+        {
+            moveSpeed = 6f;
+            if(PV.IsMine)
+                fieldOfView.SetViewDistance(moveSpeed);
+        }
+        if (isStart && PV.IsMine)
+        {
+            if(isMin || power == 1)
+            {
+                minName = NickNameText.text;
+                GameObject.Find("CameraCanvas").transform.Find("AlramText").gameObject.SetActive(true);
+            }
+        }
     }
 }
