@@ -243,10 +243,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         Hashtable player_cp = PV.Owner.CustomProperties;
         player_cp["dead"] = true;
         PV.Owner.SetCustomProperties(player_cp);
-        Transform ReadyPanel =  GameObject.Find("CameraCanvas").transform.Find("ReadyPanel");
-        ReadyPanel.gameObject.SetActive(true);
-        ReadyPanel.Find("StartBtn").gameObject.SetActive(false);
-        ReadyPanel.Find("CancelBtn").gameObject.SetActive(false);
+        
     }
 
     [PunRPC]
@@ -275,6 +272,13 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         GameObject kill = Instantiate<GameObject>(this.info, GameObject.Find("CameraCanvas").transform.Find("InGamePanel").transform.Find("KillList").transform.Find("ScrollView").transform.Find("Viewport").transform.Find("Contents").transform);
         kill.GetComponent<KillInfo>().SetNickName(PV.Owner);
         Destroy(kill, 5f);
+        if(PV.IsMine)
+        {
+            Transform ReadyPanel =  GameObject.Find("CameraCanvas").transform.Find("ReadyPanel");
+            ReadyPanel.gameObject.SetActive(true);
+            ReadyPanel.Find("StartBtn").gameObject.SetActive(false);
+            ReadyPanel.Find("CancelBtn").gameObject.SetActive(false);
+        }
     }
 
     [PunRPC]

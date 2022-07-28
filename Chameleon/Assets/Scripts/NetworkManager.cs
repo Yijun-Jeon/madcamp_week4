@@ -266,8 +266,13 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             {
                 InGamePanel.SetActive(false);
                 EndPanel.SetActive(true);
+                Invoke(nameof(AutoDisconnect),10f);
             }
         }
+    }
+    public void AutoDisconnect()
+    {
+        PhotonNetwork.Disconnect();
     }
 
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
