@@ -35,7 +35,6 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     private bool isStart = false;
     public string minName = " ";
     public int kill = 0;
-    public GameObject contents;
     public GameObject info;
 
 
@@ -266,6 +265,10 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         Hashtable player_cp = PV.Owner.CustomProperties;
         player_cp["dead"] = true;
         PV.Owner.SetCustomProperties(player_cp);
+        Transform ReadyPanel =  GameObject.Find("CameraCanvas").transform.Find("ReadyPanel");
+        ReadyPanel.gameObject.SetActive(true);
+        ReadyPanel.Find("StartBtn").gameObject.SetActive(false);
+        ReadyPanel.Find("CancelBtn").gameObject.SetActive(false);
     }
 
     [PunRPC]

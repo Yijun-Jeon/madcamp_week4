@@ -397,6 +397,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nickName: {fileID: 1770980405807578422}
+  power: {fileID: 1770980405402020159}
 --- !u!114 &5214919816136180000
 MonoBehaviour:
   m_ObjectHideFlags: 0

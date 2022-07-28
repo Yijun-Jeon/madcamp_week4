@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -29,6 +30,10 @@ public class PlayerListAdapter : MonoBehaviourPunCallbacks
         UpdateItems();
     }
 
+    public void DeleteItems()
+    {
+        
+    }
     public void UpdateItems()
     {
 
@@ -41,6 +46,8 @@ public class PlayerListAdapter : MonoBehaviourPunCallbacks
         {
             GameObject curPlayer = Instantiate<GameObject>(this.playerInfo, contents.transform);
             curPlayer.GetComponent<PlayerInfo>().SetNickName(player);
+            if(Convert.ToBoolean(PhotonNetwork.CurrentRoom.CustomProperties["start"]))
+                curPlayer.GetComponent<PlayerInfo>().SetPower(player);
         }
     }
 
@@ -48,5 +55,12 @@ public class PlayerListAdapter : MonoBehaviourPunCallbacks
     void Update()
     {
 
+    }
+    
+     public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
+    {
+        base.OnPlayerPropertiesUpdate(targetPlayer, changedProps);
+
+        UpdateItems();
     }
 }
