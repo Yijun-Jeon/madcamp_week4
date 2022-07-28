@@ -43,7 +43,9 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
         base.OnJoinRoomFailed(returnCode, message);
-        print("nononono");
+        print("nonono");
+        DisconnectPanel.transform.Find("AlertList").GetComponent<AlertListAdapter>().
+        AddAlert("게임이 이미 진행 중입니다.");
 
     }
 
@@ -81,6 +83,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     }
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            PhotonNetwork.Destroy(PhotonNetwork.GetPhotonView((int)otherPlayer.CustomProperties["PVID"]));
+
+        }
         if (!start && PhotonNetwork.IsMasterClient)
         {
             masterText.SetActive(true);
@@ -137,7 +144,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public void Spawn()
     {
-        PhotonNetwork.Instantiate("Player", new Vector3(-4.2f, 0.8f, 0), Quaternion.identity);
+        PhotonNetwork.Instantiate("Player", new Vector3(-4.2f + Random.Range(-1, 1), 0.8f + Random.Range(-1, 1), 0), Quaternion.identity);
         DisconnectPanel.SetActive(false);
         if (PhotonNetwork.IsMasterClient)
         {
@@ -156,7 +163,21 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public void startGame()
     {
         if (!PhotonNetwork.IsMasterClient)
+        {
+            ReadyPanel.transform.Find("AlertList").GetComponent<AlertListAdapter>().
+            AddAlert("방장만 게임을 시작할 수 있습니다.");
             return;
+        }
+
+        int numOfPlayers = PhotonNetwork.PlayerList.Length;
+
+        if (numOfPlayers == 1)
+        {
+            ReadyPanel.transform.Find("AlertList").GetComponent<AlertListAdapter>().
+            AddAlert("혼자서는 게임을 진행할 수 없습니다.");
+            return;
+
+        }
 
         List<Vector3> SpawnSpaces = new List<Vector3>();
         SpawnSpaces.Add(new Vector3(-27, 6, 0)); SpawnSpaces.Add(new Vector3(-4.2f, 0.8f, 0)); SpawnSpaces.Add(new Vector3(11f, -4f, 0));
@@ -178,7 +199,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         // else
         PhotonNetwork.CurrentRoom.IsOpen = false;
 
-        int numOfPlayers = PhotonNetwork.PlayerList.Length;
 
         int[] intArr = new int[numOfPlayers];
 
@@ -272,4 +292,5 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             }
         }
     }
+
 }
