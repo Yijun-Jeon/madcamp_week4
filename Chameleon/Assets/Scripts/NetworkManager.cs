@@ -25,7 +25,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     private double startTime;
     private double endTime;
 
-    public double playTime; //seconds
 
 
     void Awake()
@@ -61,7 +60,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         PhotonNetwork.LocalPlayer.NickName = NickNameInput.text;
         start = false;
         end = false;
-        PhotonNetwork.JoinOrCreateRoom("Room", new RoomOptions { MaxPlayers = 20, CleanupCacheOnLeave = false }, null);
+        PhotonNetwork.JoinOrCreateRoom("Room", new RoomOptions { MaxPlayers = 20}, null);
     }
 
     public override void OnJoinedRoom()
@@ -232,7 +231,10 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         }
         Hashtable room_cp = new Hashtable();
         room_cp.Add("start", true);
-        room_cp.Add("startTime", PhotonNetwork.Time);
+        double startTime = PhotonNetwork.Time;
+        room_cp.Add("startTime", startTime);
+        double playTime = 100f + 10 * numOfPlayers;
+        room_cp.Add("endTime", startTime + playTime);
         room_cp.Add("end", false);
         PhotonNetwork.CurrentRoom.SetCustomProperties(room_cp);
         masterText.SetActive(false);
@@ -250,7 +252,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         if (propertiesThatChanged.TryGetValue("startTime", out propsStartTime))
         {
             startTime = (double)propsStartTime;
-            endTime = startTime + playTime;
+            endTime = (double) PhotonNetwork.CurrentRoom.CustomProperties["endTime"];
             ReadyPanel.SetActive(false);
             InGamePanel.SetActive(true);
             GameObject.Find("CameraCanvas").transform.Find("MinText").gameObject.SetActive(true);
