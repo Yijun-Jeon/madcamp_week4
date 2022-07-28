@@ -10,7 +10,7 @@ public class PlayerResultInfo : MonoBehaviour
     public TMP_Text survivalTimeText;
     public Image backgroundImage;
     // Start is called before the first frame update
-    public SpriteRenderer spriteRenderer;
+    public Image skullIcon;
     void Start()
     {
         // powerText = transform.Find("PowerText").GetComponent<TMP_Text>();
