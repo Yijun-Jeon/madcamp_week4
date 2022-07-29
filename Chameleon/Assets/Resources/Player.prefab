@@ -93,7 +93,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   fov: 360
-  viewDistance: 2
+  viewDistance: 1.5
 --- !u!33 &7675782393966849352
 MeshFilter:
   m_ObjectHideFlags: 0

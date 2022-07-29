@@ -17,7 +17,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public GameObject EndPanel;
     public GameObject Black;
     public Camera MainCamera;
-    public GameObject masterText;
+    // public GameObject masterText;
 
 
     private bool start = false;
@@ -44,7 +44,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         base.OnJoinRoomFailed(returnCode, message);
         print("nonono");
-        DisconnectPanel.transform.Find("AlertList").GetComponent<AlertListAdapter>().
+        Camera.main.transform.Find("CameraCanvas").transform.Find("DisconnectPanel").transform.Find("AlertList").GetComponent<AlertListAdapter>().
         AddAlert("게임이 이미 진행 중입니다.");
 
     }
@@ -67,10 +67,12 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         DisconnectPanel.SetActive(false);
         Black.SetActive(true);
-        ReadyPanel.SetActive(true);
+        Camera.main.transform.Find("CameraCanvas").transform.Find("ReadyPanel").gameObject.SetActive(true);
+        Camera.main.transform.Find("CameraCanvas").transform.Find("ReadyPanel").transform.Find("StartBtn").gameObject.SetActive(true);
+        Camera.main.transform.Find("CameraCanvas").transform.Find("ReadyPanel").transform.Find("CancelBtn").gameObject.SetActive(true);
         if (!PhotonNetwork.IsMasterClient)
             ReadyPanel.transform.Find("StartBtn").GetComponent<Button>().interactable = false;
-        MainCamera.orthographicSize = 6;
+        MainCamera.orthographicSize = 7;
         start = false;
         end = false;
         Spawn();
@@ -90,7 +92,10 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         // }
         if (!start && PhotonNetwork.IsMasterClient)
         {
-            masterText.SetActive(true);
+            // masterText.SetActive(true);
+            // Color textColor = masterText.GetComponent<TMP_Text>().color;
+            // textColor.a = 1;
+            // masterText.GetComponent<TMP_Text>().color = textColor;
             ReadyPanel.transform.Find("StartBtn").GetComponent<Button>().interactable = true;
         }
         CheckVictoryCondition();
@@ -108,12 +113,12 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && PhotonNetwork.IsConnected)
-        {
-            PhotonNetwork.LeaveRoom();
-            PhotonNetwork.Disconnect();
-            return;
-        }
+        // if (Input.GetKeyDown(KeyCode.Escape) && PhotonNetwork.IsConnected)
+        // {
+        //     PhotonNetwork.LeaveRoom();
+        //     PhotonNetwork.Disconnect();
+        //     return;
+        // }
         if (start)
         {
             double time = PhotonNetwork.Time;
@@ -151,9 +156,9 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             // Camera.main.transform.Find("CameraCanvas").transform.Find("MasterText").gameObject.SetActive(true);
             // GameObject.FindGameObjectWithTag("MasterText").SetActive(true);
             // masterText.SetActive(true);
-            Color textColor = masterText.GetComponent<TMP_Text>().color;
-            textColor.a = 1;
-            masterText.GetComponent<TMP_Text>().color = textColor;
+            // Color textColor = masterText.GetComponent<TMP_Text>().color;
+            // textColor.a = 1;
+            // masterText.GetComponent<TMP_Text>().color = textColor;
         }
     }
 
@@ -162,20 +167,21 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         Camera.main.transform.Find("CameraCanvas").transform.Find("DisconnectPanel").gameObject.SetActive(true);
         // Camera.main.transform.Find("CameraCanvas").transform.Find("MasterText").gameObject.SetActive(false);
         // masterText.SetActive(false);
-        Color textColor = masterText.GetComponent<TMP_Text>().color;
-        textColor.a = 0;
-        masterText.GetComponent<TMP_Text>().color = textColor;
+        // Color textColor = masterText.GetComponent<TMP_Text>().color;
+        // textColor.a = 0;
+        // masterText.GetComponent<TMP_Text>().color = textColor;
         // GameObject.FindGameObjectWithTag("MasterText").SetActive(false);
-        ReadyPanel.SetActive(false);
-        InGamePanel.SetActive(false);
-        EndPanel.SetActive(false);
+        Camera.main.transform.Find("CameraCanvas").transform.Find("ReadyPanel").gameObject.SetActive(false);
+        Camera.main.transform.Find("CameraCanvas").transform.Find("InGamePanel").transform.Find("AlramText").gameObject.SetActive(false);
+        Camera.main.transform.Find("CameraCanvas").transform.Find("InGamePanel").gameObject.SetActive(false);
+        Camera.main.transform.Find("CameraCanvas").transform.Find("EndPanel").gameObject.SetActive(false);
     }
 
     public void startGame()
     {
         if (!PhotonNetwork.IsMasterClient)
         {
-            ReadyPanel.transform.Find("AlertList").GetComponent<AlertListAdapter>().
+            Camera.main.transform.Find("CameraCanvas").transform.Find("ReadyPanel").transform.Find("AlertList").GetComponent<AlertListAdapter>().
             AddAlert("방장만 게임을 시작할 수 있습니다.");
             return;
         }
@@ -184,7 +190,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
         if (numOfPlayers == 1)
         {
-            ReadyPanel.transform.Find("AlertList").GetComponent<AlertListAdapter>().
+            Camera.main.transform.Find("CameraCanvas").transform.Find("ReadyPanel").transform.Find("AlertList").GetComponent<AlertListAdapter>().
             AddAlert("혼자서는 게임을 진행할 수 없습니다.");
             return;
 
@@ -248,7 +254,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         room_cp.Add("endTime", startTime + playTime);
         room_cp.Add("end", false);
         PhotonNetwork.CurrentRoom.SetCustomProperties(room_cp);
-        masterText.SetActive(false);
+        // masterText.SetActive(false);
     }
 
 
@@ -264,10 +270,10 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         {
             startTime = (double)propsStartTime;
             endTime = (double)PhotonNetwork.CurrentRoom.CustomProperties["endTime"];
-            ReadyPanel.SetActive(false);
-            InGamePanel.SetActive(true);
-            GameObject.Find("CameraCanvas").transform.Find("MinText").gameObject.SetActive(true);
-            GameObject.Find("CameraCanvas").transform.Find("KillText").gameObject.SetActive(true);
+            GameObject.Find("CameraCanvas").transform.Find("ReadyPanel").gameObject.SetActive(false);
+            GameObject.Find("CameraCanvas").transform.Find("InGamePanel").gameObject.SetActive(true);
+            GameObject.Find("CameraCanvas").transform.Find("InGamePanel").transform.Find("MinText").gameObject.SetActive(true);
+            GameObject.Find("CameraCanvas").transform.Find("InGamePanel").transform.Find("KillText").gameObject.SetActive(true);
         }
         object propsEnd;
         if (propertiesThatChanged.TryGetValue("end", out propsEnd))
@@ -275,8 +281,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             end = (bool)propsEnd;
             if (end == true)
             {
-                InGamePanel.SetActive(false);
-                EndPanel.SetActive(true);
+                GameObject.Find("CameraCanvas").transform.Find("InGamePanel").gameObject.SetActive(false);
+                GameObject.Find("CameraCanvas").transform.Find("EndPanel").gameObject.SetActive(true);
                 Invoke(nameof(AutoDisconnect), 10f);
             }
         }

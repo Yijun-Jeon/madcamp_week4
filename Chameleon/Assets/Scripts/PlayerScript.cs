@@ -124,7 +124,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
             }
             if (min == power)
                 isMin = true;
-            GameObject.Find("CameraCanvas").transform.Find("MinText").GetComponent<TMP_Text>().text = "현재 꼴등 : " + minName;
+            GameObject.Find("CameraCanvas").transform.Find("InGamePanel").transform.Find("MinText").GetComponent<TMP_Text>().text = "현재 꼴등 : " + minName;
             GameObject.Find("CameraCanvas").transform.Find("InGamePanel").transform.Find("RemainText").GetComponent<TMP_Text>().text = remainCnt + "/" + PhotonNetwork.PlayerList.Length;
         }
         if (prevIsStart != isStart)
@@ -139,7 +139,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         {
             // fieldOfView.SetOrigin(transform.position);
             attackRange.SetOrigin(transform.position);
-            GameObject.Find("CameraCanvas").transform.Find("KillText").GetComponent<TMP_Text>().text = "Kill : " + kill.ToString();
+            GameObject.Find("CameraCanvas").transform.Find("InGamePanel").transform.Find("KillText").GetComponent<TMP_Text>().text = "Kill : " + kill.ToString();
 
             // 샤킹중이면 아무것도 못함
             if (curTime_fake > 0)
@@ -168,7 +168,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
                         else AN.SetBool("walk", false);
                     }
 
-                    Collider2D[] collider2Ds = Physics2D.OverlapCircleAll(pos.position, 2f);
+                    Collider2D[] collider2Ds = Physics2D.OverlapCircleAll(pos.position, 1.5f);
                     bool activated = false;
                     foreach (Collider2D collider in collider2Ds)
                     {
@@ -221,7 +221,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
                     RB.velocity = Vector2.zero;
                     PowerText.color = Color.white;
                     attackRange.SetColor(false);
-                    GameObject.Find("CameraCanvas").transform.Find("AlramText").gameObject.SetActive(false);
+                    GameObject.Find("CameraCanvas").transform.Find("InGamePanel").transform.Find("AlramText").gameObject.SetActive(false);
                     isMin = false;
                 }
             }
@@ -305,8 +305,8 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     }
     public void AdjustSpeedAndVision(int numAlive)
     {
-        moveSpeed = 12f - numAlive * 0.3f;
-        if (PV.IsMine) fieldOfView.SetViewDistance(moveSpeed);
+        moveSpeed = 10f - numAlive * 0.3f;
+        if (PV.IsMine) fieldOfView.SetViewDistance(moveSpeed * 1.5f);
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
@@ -338,25 +338,27 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
             AdjustSpeedAndVision(remainCnt);
             if (isMin)
             {
-                moveSpeed += Math.Max(0, remainCnt - 2) * 0.1f;
+                moveSpeed += Math.Max(0, remainCnt - 2) * 0.2f;
                 if (PV.IsMine)
-                    fieldOfView.SetViewDistance(moveSpeed);
+                    fieldOfView.SetViewDistance(moveSpeed * 1.5f);
             }
-            GameObject.Find("CameraCanvas").transform.Find("MinText").GetComponent<TMP_Text>().text = "현재 꼴등 : " + minName;
+            GameObject.Find("CameraCanvas").transform.Find("InGamePanel").gameObject.SetActive(true);
+            GameObject.Find("CameraCanvas").transform.Find("InGamePanel").transform.Find("MinText").GetComponent<TMP_Text>().text = "현재 꼴등 : " + minName;
             GameObject.Find("CameraCanvas").transform.Find("InGamePanel").transform.Find("RemainText").GetComponent<TMP_Text>().text = remainCnt + "/" + PhotonNetwork.PlayerList.Length;
         }
         else
         {
             moveSpeed = 6f;
             if (PV.IsMine)
-                fieldOfView.SetViewDistance(moveSpeed);
+                fieldOfView.SetViewDistance(moveSpeed * 1.5f);
         }
         if (isStart && PV.IsMine)
         {
             if (isMin || power == 1)
             {
                 minName = NickNameText.text;
-                GameObject.Find("CameraCanvas").transform.Find("AlramText").gameObject.SetActive(true);
+                GameObject.Find("CameraCanvas").transform.Find("InGamePanel").gameObject.SetActive(true);
+                GameObject.Find("CameraCanvas").transform.Find("InGamePanel").transform.Find("AlramText").gameObject.SetActive(true);
             }
         }
     }
