@@ -144,6 +144,10 @@ public class NetworkManager : MonoBehaviourPunCallbacks
                 {
                     InGamePanel.transform.Find("TimerText").GetComponent<TMP_Text>().color = Color.red;
                 }
+                else
+                {
+                    InGamePanel.transform.Find("TimerText").GetComponent<TMP_Text>().color = Color.white;
+                }
             }
         }
 
@@ -285,6 +289,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             {
                 GameObject.Find("CameraCanvas").transform.Find("InGamePanel").gameObject.SetActive(false);
                 GameObject.Find("CameraCanvas").transform.Find("EndPanel").gameObject.SetActive(true);
+                GameObject.Find("CameraCanvas").transform.Find("EndPanel").transform.Find("PlayerResultLayout").GetComponent<PlayerResultListAdapter>().UpdateItems();
                 Invoke(nameof(AutoDisconnect), 10f);
             }
         }

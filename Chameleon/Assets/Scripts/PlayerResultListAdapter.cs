@@ -35,7 +35,7 @@ public class PlayerResultListAdapter : MonoBehaviour
     {
 
     }
-    void UpdateItems()
+    public void UpdateItems()
     {
         foreach (Transform child in transform)
         {
