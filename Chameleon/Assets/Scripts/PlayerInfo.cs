@@ -10,6 +10,7 @@ public class PlayerInfo : MonoBehaviour
 {
     public TMP_Text nickName;
     public TMP_Text power;
+    public SpriteRenderer SPRD;
     Player player;
     // Start is called before the first frame update
     void Start()
@@ -22,6 +23,12 @@ public class PlayerInfo : MonoBehaviour
         this.nickName.text = player.NickName;
         this.player = player;
     }
+
+    public void setColor(Color color)
+    {
+        SPRD.color = color;
+    }
+
     public void SetPower(Player player)
     {
         this.power.text = player.CustomProperties["power"].ToString();

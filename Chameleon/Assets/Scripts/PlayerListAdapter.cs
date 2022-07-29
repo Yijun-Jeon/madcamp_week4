@@ -32,7 +32,7 @@ public class PlayerListAdapter : MonoBehaviourPunCallbacks
 
     public void DeleteItems()
     {
-        
+
     }
     public void UpdateItems()
     {
@@ -46,8 +46,13 @@ public class PlayerListAdapter : MonoBehaviourPunCallbacks
         {
             GameObject curPlayer = Instantiate<GameObject>(this.playerInfo, contents.transform);
             curPlayer.GetComponent<PlayerInfo>().SetNickName(player);
-            if(Convert.ToBoolean(PhotonNetwork.CurrentRoom.CustomProperties["start"]))
+            if (Convert.ToBoolean(PhotonNetwork.CurrentRoom.CustomProperties["start"]))
                 curPlayer.GetComponent<PlayerInfo>().SetPower(player);
+            if ((bool)player.CustomProperties["dead"])
+                curPlayer.GetComponent<PlayerInfo>().setColor(Color.grey);
+            else
+                curPlayer.GetComponent<PlayerInfo>().setColor(Color.red);
+
         }
     }
 
@@ -56,8 +61,8 @@ public class PlayerListAdapter : MonoBehaviourPunCallbacks
     {
 
     }
-    
-     public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
+
+    public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
         base.OnPlayerPropertiesUpdate(targetPlayer, changedProps);
 
