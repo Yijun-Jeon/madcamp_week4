@@ -71,7 +71,9 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         Camera.main.transform.Find("CameraCanvas").transform.Find("ReadyPanel").transform.Find("StartBtn").gameObject.SetActive(true);
         Camera.main.transform.Find("CameraCanvas").transform.Find("ReadyPanel").transform.Find("CancelBtn").gameObject.SetActive(true);
         if (!PhotonNetwork.IsMasterClient)
-            ReadyPanel.transform.Find("StartBtn").GetComponent<Button>().interactable = false;
+            Camera.main.transform.Find("CameraCanvas").transform.Find("ReadyPanel").transform.Find("StartBtn").GetComponent<Button>().interactable = false;
+        else
+            Camera.main.transform.Find("CameraCanvas").transform.Find("ReadyPanel").transform.Find("StartBtn").GetComponent<Button>().interactable = true;
         MainCamera.orthographicSize = 7;
         start = false;
         end = false;
