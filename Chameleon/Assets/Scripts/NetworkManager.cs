@@ -256,7 +256,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         room_cp.Add("start", true);
         double startTime = PhotonNetwork.Time;
         room_cp.Add("startTime", startTime);
-        double playTime = 100f + 10 * numOfPlayers;
+        // double playTime = 100f + 10 * numOfPlayers;
+        double playTime = 120f;
         room_cp.Add("endTime", startTime + playTime);
         room_cp.Add("end", false);
         PhotonNetwork.CurrentRoom.SetCustomProperties(room_cp);
