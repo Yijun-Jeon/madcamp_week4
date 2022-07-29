@@ -29,7 +29,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     void Awake()
     {
-        // Screen.SetResolution(960, 540, false);
+        Screen.SetResolution(960, 540, false);
         PhotonNetwork.SendRate = 60;
         PhotonNetwork.SerializationRate = 30;
     }
@@ -247,7 +247,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             // Hashtable player_cp = new Hashtable();
             Hashtable player_cp = player.CustomProperties;
             player_cp["dead"] = false;
-            player_cp["power"] = intArr[index];
+            player_cp["power"] = player.IsLocal ? -1 : intArr[index];
             player_cp["space"] = SpawnSpaces[intArr[index]];
             player.SetCustomProperties(player_cp);
             index++;

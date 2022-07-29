@@ -48,11 +48,12 @@ public class PlayerListAdapter : MonoBehaviourPunCallbacks
             curPlayer.GetComponent<PlayerInfo>().SetNickName(player);
             if (Convert.ToBoolean(PhotonNetwork.CurrentRoom.CustomProperties["start"]))
                 curPlayer.GetComponent<PlayerInfo>().SetPower(player);
-            if ((bool)player.CustomProperties["dead"])
+
+            object curProp;
+            if (player.CustomProperties.TryGetValue("dead", out curProp) && (bool)curProp)
                 curPlayer.GetComponent<PlayerInfo>().setColor(Color.grey);
             else
                 curPlayer.GetComponent<PlayerInfo>().setColor(Color.red);
-
         }
     }
 
