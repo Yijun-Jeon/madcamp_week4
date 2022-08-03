@@ -29,6 +29,8 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
     public int power;
     [SerializeField] public TMP_Text AlarmText;
     public bool isControl;
+    public bool canTeleport;
+    public Transform teleportTarget;
     private bool isMin;
     private bool isSpawn;
     private bool isDead = false;
@@ -57,7 +59,8 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
         isControl = true;
         isMin = false;
         isSpawn = true;
-
+        canTeleport = false;
+        teleportTarget = null;
         System.Random rand = new System.Random();
 
         if (PV.IsMine)
@@ -153,6 +156,10 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
                 {
                     if (isControl)
                     {
+                        if(canTeleport && Input.GetKeyDown(KeyCode.LeftAlt))
+                        {
+                            StartCoroutine(nameof(TeleportRoutine));
+                        }
                         float xAxis = Input.GetAxisRaw("Horizontal");
                         float yAxis = Input.GetAxisRaw("Vertical");
                         RB.velocity = new Vector2(xAxis, yAxis).normalized * moveSpeed;
@@ -361,5 +368,15 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunObservable
                 GameObject.Find("CameraCanvas").transform.Find("InGamePanel").transform.Find("AlramText").gameObject.SetActive(true);
             }
         }
+    }
+    IEnumerator TeleportRoutine()
+    {
+        yield return null;
+        isControl = false;
+        yield return new WaitForSeconds(0.5f);
+        transform.position = teleportTarget?.position ?? transform.position;
+        yield return new WaitForSeconds(1f);
+        isControl = true;
+
     }
 }

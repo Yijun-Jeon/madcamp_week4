@@ -357,6 +357,8 @@ MonoBehaviour:
   power: 0
   AlarmText: {fileID: 0}
   isControl: 0
+  canTeleport: 0
+  teleportTarget: {fileID: 0}
   minName: ' '
   kill: 0
   info: {fileID: 1770980406349751085, guid: 4522efad6df4ab84aa5b987df24432dc, type: 3}

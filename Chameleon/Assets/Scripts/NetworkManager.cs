@@ -247,7 +247,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             // Hashtable player_cp = new Hashtable();
             Hashtable player_cp = player.CustomProperties;
             player_cp["dead"] = false;
-            player_cp["power"] = player.IsLocal ? -1 : intArr[index];
+            player_cp["power"] = intArr[index];
+            // player_cp["power"] = player.IsLocal ? -1 : intArr[index];
             player_cp["space"] = SpawnSpaces[intArr[index]];
             player.SetCustomProperties(player_cp);
             index++;

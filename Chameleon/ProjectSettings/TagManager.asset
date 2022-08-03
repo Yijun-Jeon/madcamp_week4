@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - MasterText
+  - Teleport
   layers:
   - Default
   - TransparentFX

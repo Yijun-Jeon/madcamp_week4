@@ -7,40 +7,46 @@ public class teleport : MonoBehaviour
     public GameObject targetObj;
     public GameObject toObj;
     Animator animator;
+    public int playerCount;
 
     private void Start()
     {
         animator = GetComponent<Animator>();
+        playerCount = 0;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.CompareTag("Player"))
+        if (collision.CompareTag("Player"))
         {
-            animator.SetBool("gate",true);
             targetObj = collision.gameObject;
+            targetObj.GetComponent<PlayerScript>().teleportTarget = toObj.transform;
+            targetObj.GetComponent<PlayerScript>().canTeleport = true;
+            playerCount++;
         }
+        if (playerCount > 0)
+            animator.SetBool("gate", true);
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if(collision.CompareTag("Player"))
-            animator.SetBool("gate",false);
-    }
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        if(collision.CompareTag("Player") && Input.GetKeyDown(KeyCode.LeftAlt))
+        if (collision.CompareTag("Player"))
         {
-            StartCoroutine(TeleportRoutine());
+            targetObj = collision.gameObject;
+            targetObj.GetComponent<PlayerScript>().teleportTarget = null;
+            targetObj.GetComponent<PlayerScript>().canTeleport = false;
+            playerCount--;
         }
+        if (playerCount <= 0)
+            animator.SetBool("gate", false);
     }
-    IEnumerator TeleportRoutine()
-    {
-        yield return null;
-        targetObj.GetComponent<PlayerScript>().isControl = false;
-        yield return new WaitForSeconds(0.5f);
-        targetObj.transform.position = toObj.transform.position;
-        yield return new WaitForSeconds(1f);
-        targetObj.GetComponent<PlayerScript>().isControl = true;
+    // IEnumerator TeleportRoutine()
+    // {
+    //     yield return null;
+    //     targetObj.GetComponent<PlayerScript>().isControl = false;
+    //     yield return new WaitForSeconds(0.5f);
+    //     targetObj.transform.position = toObj.transform.position;
+    //     yield return new WaitForSeconds(1f);
+    //     targetObj.GetComponent<PlayerScript>().isControl = true;
 
-    }
+    // }
 }
