@@ -27,7 +27,7 @@ public class PlayerResultListAdapter : MonoBehaviour
     }
     void Start()
     {
-        UpdateItems();
+        // UpdateItems();
     }
 
     // Update is called once per frame

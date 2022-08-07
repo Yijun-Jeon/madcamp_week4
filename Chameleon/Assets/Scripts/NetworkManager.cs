@@ -126,13 +126,17 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             double time = PhotonNetwork.Time;
             if (time >= endTime)
             {
-                if (PhotonNetwork.IsMasterClient)
+                if (end == false)
                 {
-                    Hashtable room_cp = PhotonNetwork.CurrentRoom.CustomProperties;
-                    room_cp["end"] = true;
-                    PhotonNetwork.CurrentRoom.SetCustomProperties(room_cp);
+                    Camera.main.transform.Find("CameraCanvas").transform.Find("InGamePanel").transform.Find("TimerText").GetComponent<TMP_Text>().text = $"게임 종료!";
+                    Camera.main.transform.Find("CameraCanvas").transform.Find("InGamePanel").gameObject.SetActive(false);
+                    if (PhotonNetwork.IsMasterClient)
+                    {
+                        Hashtable room_cp = PhotonNetwork.CurrentRoom.CustomProperties;
+                        room_cp["end"] = true;
+                        PhotonNetwork.CurrentRoom.SetCustomProperties(room_cp);
+                    }
                 }
-                InGamePanel.transform.Find("TimerText").GetComponent<TMP_Text>().text = $"게임 종료!";
             }
             else
             {
@@ -268,6 +272,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public override void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
     {
+        bool prevStart = start;
         object propsStart;
         if (propertiesThatChanged.TryGetValue("start", out propsStart))
         {
@@ -278,20 +283,24 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         {
             startTime = (double)propsStartTime;
             endTime = (double)PhotonNetwork.CurrentRoom.CustomProperties["endTime"];
-            GameObject.Find("CameraCanvas").transform.Find("ReadyPanel").gameObject.SetActive(false);
-            GameObject.Find("CameraCanvas").transform.Find("InGamePanel").gameObject.SetActive(true);
-            GameObject.Find("CameraCanvas").transform.Find("InGamePanel").transform.Find("MinText").gameObject.SetActive(true);
-            GameObject.Find("CameraCanvas").transform.Find("InGamePanel").transform.Find("KillText").gameObject.SetActive(true);
+            if (start == true && start != prevStart)
+            {
+                Camera.main.transform.Find("CameraCanvas").transform.Find("ReadyPanel").gameObject.SetActive(false);
+                Camera.main.transform.Find("CameraCanvas").transform.Find("InGamePanel").gameObject.SetActive(true);
+                Camera.main.transform.Find("CameraCanvas").transform.Find("InGamePanel").transform.Find("MinText").gameObject.SetActive(true);
+                Camera.main.transform.Find("CameraCanvas").transform.Find("InGamePanel").transform.Find("KillText").gameObject.SetActive(true);
+            }
         }
         object propsEnd;
         if (propertiesThatChanged.TryGetValue("end", out propsEnd))
         {
+            bool prevEnd = end;
             end = (bool)propsEnd;
-            if (end == true)
+            if (end == true && end != prevEnd)
             {
-                GameObject.Find("CameraCanvas").transform.Find("InGamePanel").gameObject.SetActive(false);
-                GameObject.Find("CameraCanvas").transform.Find("EndPanel").gameObject.SetActive(true);
-                GameObject.Find("CameraCanvas").transform.Find("EndPanel").transform.Find("PlayerResultLayout").GetComponent<PlayerResultListAdapter>().UpdateItems();
+                Camera.main.transform.Find("CameraCanvas").transform.Find("InGamePanel").gameObject.SetActive(false);
+                Camera.main.transform.Find("CameraCanvas").transform.Find("EndPanel").gameObject.SetActive(true);
+                Camera.main.transform.Find("CameraCanvas").transform.Find("EndPanel").transform.Find("PlayerResultLayout").GetComponent<PlayerResultListAdapter>().UpdateItems();
                 Invoke(nameof(AutoDisconnect), 10f);
             }
         }
@@ -308,7 +317,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public void CheckVictoryCondition()
     {
         int numAlive = 0;
-        if (start && PhotonNetwork.IsMasterClient)
+        if (start && PhotonNetwork.IsMasterClient && end == false)
         {
             foreach (Player player in PhotonNetwork.PlayerList)
             {
